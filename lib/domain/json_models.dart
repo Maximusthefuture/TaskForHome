@@ -6,7 +6,13 @@ class PopularMovies {
   int id;
   String title;
 
-  PopularMovies({this.title, this. id, this.page, this.totalResults, this.totalPages, this.results});
+  PopularMovies(
+      {this.title,
+      this.id,
+      this.page,
+      this.totalResults,
+      this.totalPages,
+      this.results});
 
   PopularMovies.fromJson(Map<String, dynamic> json) {
     page = json['page'];
@@ -14,7 +20,8 @@ class PopularMovies {
     totalPages = json['total_pages'];
     id = json['id'];
     title = json['title'];
-    results = List<Results>.from(json['results'].map((it) => Results.fromJson(it)));
+    results =
+        List<Results>.from(json['results'].map((it) => Results.fromJson(it)));
   }
 
   Map<String, dynamic> toJson() {
@@ -98,7 +105,33 @@ class Results {
   }
 }
 
-
 class MovieDetails {
-  
+  final bool adult;
+  final String backdropPath;
+  final int budget;
+  final String homepage;
+  final int id;
+  final String imdbId;
+  final String originalLanguage;
+  final String originalTitle;
+  final String overview;
+
+  MovieDetails({this.overview, 
+      this.adult,
+      this.backdropPath,
+      this.budget,
+      this.homepage,
+      this.id,
+      this.imdbId,
+      this.originalLanguage,
+      this.originalTitle});
+
+  factory MovieDetails.fromJson(Map<String, dynamic> json) {
+    return MovieDetails(
+    id:json['id'],
+    originalTitle: json['original_title'],
+    overview: json['overview']
+    );
+
+  }
 }

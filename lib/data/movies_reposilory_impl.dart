@@ -7,12 +7,12 @@ import 'package:tasks_for_home/domain/json_models.dart';
 
 
 class MoviesRepositoryImpl implements MoviesRepository {
-   String _API_KEY = 'YOUR KEY';
+   static const String api_key= '6efc87390c4c8501566dd6c4cd3a09c5';
 
   @override
   Future<List<Results>> fetchPhotos() async {
     final response = await http
-        .get('https://api.themoviedb.org/3/movie/popular?api_key=$_API_KEY');
+        .get('https://api.themoviedb.org/3/movie/popular?api_key=$api_key');
     return getPopularMovies(response.body);
   }
 
@@ -23,12 +23,13 @@ class MoviesRepositoryImpl implements MoviesRepository {
 
   @override
   List<MovieDetails> getMovieDetails(String body) {
-    return null;
+    final parsed = json.decode(body).cast<Map<String,dynamic>>();
+    return parsed.map<MovieDetails>((json) => MovieDetails.fromJson(json)).toList();
   }
 
   @override
   Future<List<MovieDetails>> fetchMovieById(int id) async {
-    final response = await http.get('https://api.themoviedb.org/3/movie/$id?api_key=$_API_KEY');
+    final response = await http.get('https://api.themoviedb.org/3/movie/$id?api_key=$api_key');
     return getMovieDetails(response.body);
   }
 }

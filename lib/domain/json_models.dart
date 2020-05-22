@@ -97,3 +97,8 @@ class Results {
     return data;
   }
 }
+
+
+class MovieDetails {
+  
+}

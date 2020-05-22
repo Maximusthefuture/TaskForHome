@@ -19,19 +19,14 @@ class PopularMoviesWidget extends StatelessWidget {
             return Container(
                 padding: EdgeInsets.symmetric(vertical: 0, horizontal: 2),
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-          
-                  child: GestureDetector(
-                  
-                    onTapUp: (_) {
+                    borderRadius: BorderRadius.circular(20),
+                    child: GestureDetector(
+                      onTapUp: (_) {
                         print("${list[index].id}");
-                    },
-                    child: Image.network(
-                      "https://image.tmdb.org/t/p/w154${list[index].posterPath}"),
-                  )
-                  
-                  
-                ));
+                      },
+                      child: Image.network(
+                          "https://image.tmdb.org/t/p/w154${list[index].posterPath}"),
+                    )));
           }),
     );
   }

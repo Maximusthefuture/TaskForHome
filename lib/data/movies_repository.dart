@@ -4,4 +4,6 @@ abstract class MoviesRepository {
 
   List<Results> getPopularMovies(String body);
   Future<List<Results>> fetchPhotos();
+  Future<List<MovieDetails>> fetchMovieById(int id);
+  List<MovieDetails> getMovieDetails(String body);
 }

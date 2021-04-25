@@ -113,25 +113,43 @@ class MovieDetails {
   final int id;
   final String imdbId;
   final String originalLanguage;
-  final String originalTitle;
   final String overview;
+  final String title;
+  final String status;
+  final String posterPath;
+  final num voteAverage;
+  final String releaseDate;
+  final num duration;
 
-  MovieDetails({this.overview, 
-      this.adult,
-      this.backdropPath,
-      this.budget,
-      this.homepage,
-      this.id,
-      this.imdbId,
-      this.originalLanguage,
-      this.originalTitle});
+  MovieDetails({
+    this.duration,
+    this.releaseDate,
+    this.title,
+    this.voteAverage,
+    this.posterPath,
+    this.status,
+    this.overview,
+    this.adult,
+    this.backdropPath,
+    this.budget,
+    this.homepage,
+    this.id,
+    this.imdbId,
+    this.originalLanguage,
+  });
 
   factory MovieDetails.fromJson(Map<String, dynamic> json) {
     return MovieDetails(
-    id:json['id'],
-    originalTitle: json['original_title'],
-    overview: json['overview']
+      id: json['id'],
+      // originalTitle: json['original_title'],
+      overview: json['overview'],
+      status: json['status'],
+      posterPath: json['poster_path'],
+      backdropPath: json['backdrop_path'],
+      voteAverage: json['vote_average'],
+      title: json['title'],
+      releaseDate: json['release_date'],
+      duration: json['runtime'],
     );
-
   }
 }

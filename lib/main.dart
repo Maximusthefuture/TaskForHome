@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:tasks_for_home/screens/movies_series.dart';
+import 'package:tasks_for_home/presentation/screens/movies_series.dart';
+import 'package:tasks_for_home/presentation/screens/reminder_screen.dart';
+
 
 void main() => runApp(Home());
 
@@ -18,7 +20,7 @@ int _selectedIndex = 0;
 static  List<Widget> _widgetsOptions = <Widget>[
   Text('Index 0: Home'),
   MoviesTvSeries(),
-  Text('Index 1: Business'),
+  ReminderScreen(),
   Text('Index 2: School'),
   Text('her her')
 ];

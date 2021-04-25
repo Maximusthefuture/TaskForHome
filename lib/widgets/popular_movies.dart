@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:tasks_for_home/data/movie_detail_bloc_provider.dart';
 import 'package:tasks_for_home/domain/json_models.dart';
+import 'package:tasks_for_home/presentation/screens/movie_detail_screen.dart';
 
 class PopularMoviesWidget extends StatelessWidget {
   final List<Results> list;
@@ -22,7 +24,14 @@ class PopularMoviesWidget extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                     child: GestureDetector(
                       onTapUp: (_) {
-                        print("${list[index].id}");
+                        Navigator.of(context)
+                            .push(MaterialPageRoute(builder: (_) {
+                          return MovieDetailBlocProvider(
+                            child: MovieDetailsScreen(
+                            movieId: list[index].id
+                          ));
+                        }));
+                        print("id: ${list[index].id}");
                       },
                       child: Image.network(
                           "https://image.tmdb.org/t/p/w154${list[index].posterPath}"),

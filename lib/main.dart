@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:tasks_for_home/presentation/screens/buy_list_screen.dart';
 import 'package:tasks_for_home/presentation/screens/movies_series.dart';
 import 'package:tasks_for_home/presentation/screens/reminder_screen.dart';
 
@@ -18,7 +19,7 @@ class Home extends StatefulWidget {
 class HomeState extends State<Home> {
 int _selectedIndex = 0;
 static  List<Widget> _widgetsOptions = <Widget>[
-  Text('Index 0: Home'),
+  BuyListScreen(),
   MoviesTvSeries(),
   ReminderScreen(),
   Text('Index 2: School'),
@@ -34,6 +35,10 @@ void _onItemTapped(int index) {
   @override
   Widget build(BuildContext context) {
    
+    const bottomNavigationBarItem = BottomNavigationBarItem(
+                icon: Icon(Icons.settings,),
+                label: "Настройки",
+              );
     return MaterialApp(
         home: Scaffold(
           // appBar: AppBar(
@@ -47,20 +52,17 @@ void _onItemTapped(int index) {
             items: const <BottomNavigationBarItem>[
               BottomNavigationBarItem(
                 icon: Icon(Icons.transfer_within_a_station),
-                title: Text("Покупки"),
+                label: "Покупки",
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.local_movies),
-                title: Text("Развлечения"),
+                label: "Развлечения",
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.alarm),
-                title: Text("Напоминания"),
+                label: "Напоминания",
               ),
-               BottomNavigationBarItem(
-                icon: Icon(Icons.settings,),
-                title: Text("Настройки"),
-              ),
+               bottomNavigationBarItem,
             ],
             currentIndex: _selectedIndex,
             selectedItemColor: CupertinoColors.activeBlue,

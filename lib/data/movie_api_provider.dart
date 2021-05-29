@@ -6,9 +6,14 @@ import 'package:http/http.dart' as http;
 class MoviesApiProvider {
   static const String _api_key = '6efc87390c4c8501566dd6c4cd3a09c5';
 
+
+  List<PopularTvShows> getPopularTvShows(String body)  {
+     return PopularTvShows.fromJson(json.decode(body)).results;
+  }
+
   Future<List<Results>> fetchPopular() async {
     final response = await http
-        .get('https://api.themoviedb.org/3/movie/popular?api_key=${_api_key}');
+        .get(Uri.parse('https://api.themoviedb.org/3/movie/popular?api_key=${_api_key}'));
     return getPopularMovies(response.body);
   }
 
@@ -23,7 +28,7 @@ class MoviesApiProvider {
 
   Future<MovieDetails> fetchMovieById(int id) async {
     final response = await http
-        .get('https://api.themoviedb.org/3/movie/$id?api_key=$_api_key');
+        .get(Uri.parse('https://api.themoviedb.org/3/movie/$id?api_key=$_api_key'));
     return getMovieDetails(response.body);
   }
 }

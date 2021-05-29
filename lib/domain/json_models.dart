@@ -1,3 +1,17 @@
+
+class PopularTvShows {
+  List<PopularTvShows> results;
+
+  PopularTvShows(
+    {
+      this.results
+    }
+  );
+  PopularTvShows.fromJson(Map<String, dynamic> json) {
+
+  } 
+}
+
 class PopularMovies {
   int page;
   int totalResults;
@@ -37,7 +51,7 @@ class PopularMovies {
 }
 
 class Results {
-  double popularity;
+  // double popularity;
   int voteCount;
   bool video;
   String posterPath;
@@ -53,7 +67,8 @@ class Results {
   String releaseDate;
 
   Results(
-      {this.popularity,
+      {
+        // this.popularity,
       this.voteCount,
       this.video,
       this.posterPath,
@@ -69,7 +84,7 @@ class Results {
       this.releaseDate});
 
   Results.fromJson(Map<String, dynamic> json) {
-    popularity = json['popularity'];
+    // popularity = json['popularity'];
     voteCount = json['vote_count'];
     video = json['video'];
     posterPath = json['poster_path'];
@@ -87,7 +102,7 @@ class Results {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['popularity'] = this.popularity;
+    // data['popularity'] = this.popularity;
     data['vote_count'] = this.voteCount;
     data['video'] = this.video;
     data['poster_path'] = this.posterPath;

@@ -7,7 +7,7 @@ class WatchList extends StatefulWidget {
 }
 
 class _WatchListState extends State<WatchList> {
-   List<String> items;
+   List<String> items = ["zopa", "ne zopa", "dada"];
 
  
   @override
@@ -17,8 +17,9 @@ class _WatchListState extends State<WatchList> {
           title: Text("Watch list"),
         ),
         body: ListView.builder(
+          itemCount: 3,
           itemBuilder: (context, index) {
-          
+              return Container(child: Text('${items[index]}'),);
           
         }));
   }

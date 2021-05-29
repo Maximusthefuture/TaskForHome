@@ -18,4 +18,10 @@ class MoviesRepositoryImpl implements MoviesRepository {
   Future<MovieDetails> fetchMovieById(int id) async {
     return moviesApiProvider.fetchMovieById(id);
   }
+
+  @override
+  Future<List<PopularTvShows>> fetchPopularTvShows() {
+    // TODO: implement fetchPopularTvShows
+    throw UnimplementedError();
+  }
 }

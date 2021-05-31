@@ -5,9 +5,9 @@ import 'package:tasks_for_home/domain/json_models.dart';
 import 'package:tasks_for_home/presentation/screens/movie_detail_screen.dart';
 
 class PopularMoviesWidget extends StatelessWidget {
-  final List<Results> list;
+  final List<Results>? list;
 
-  const PopularMoviesWidget({Key key, this.list}) : super(key: key);
+  const PopularMoviesWidget({key, this.list}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +16,7 @@ class PopularMoviesWidget extends StatelessWidget {
       width: double.infinity,
       child: ListView.builder(
           scrollDirection: Axis.horizontal,
-          itemCount: list.length,
+          itemCount: list?.length,
           itemBuilder: (context, index) {
             return Container(
                 padding: EdgeInsets.symmetric(vertical: 0, horizontal: 2),
@@ -28,13 +28,13 @@ class PopularMoviesWidget extends StatelessWidget {
                             .push(MaterialPageRoute(builder: (_) {
                           return MovieDetailBlocProvider(
                             child: MovieDetailsScreen(
-                            movieId: list[index].id
+                            movieId: list![index].id
                           ));
                         }));
-                        print("id: ${list[index].id}");
+                        print("id: ${list![index].id}");
                       },
                       child: Image.network(
-                          "https://image.tmdb.org/t/p/w154${list[index].posterPath}"),
+                          "https://image.tmdb.org/t/p/w154${list![index].posterPath}"),
                     )));
           }),
     );

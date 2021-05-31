@@ -1,6 +1,6 @@
 
 class PopularTvShows {
-  List<PopularTvShows> results;
+  List<PopularTvShows>? results;
 
   PopularTvShows(
     {
@@ -13,12 +13,12 @@ class PopularTvShows {
 }
 
 class PopularMovies {
-  int page;
-  int totalResults;
-  int totalPages;
-  List<Results> results;
-  int id;
-  String title;
+  int? page;
+  int? totalResults;
+  int? totalPages;
+  List<Results> ?results;
+  int? id;
+  String? title;
 
   PopularMovies(
       {this.title,
@@ -44,7 +44,7 @@ class PopularMovies {
     data['total_results'] = this.totalResults;
     data['total_pages'] = this.totalPages;
     if (this.results != null) {
-      data['results'] = this.results.map((v) => v.toJson()).toList();
+      data['results'] = this.results?.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -52,19 +52,19 @@ class PopularMovies {
 
 class Results {
   // double popularity;
-  int voteCount;
-  bool video;
-  String posterPath;
-  int id;
-  bool adult;
-  String backdropPath;
-  String originalLanguage;
-  String originalTitle;
-  List<int> genreIds;
-  String title;
-  double voteAverage;
-  String overview;
-  String releaseDate;
+  int? voteCount;
+  bool? video;
+  String? posterPath;
+  int? id;
+  bool? adult;
+  String? backdropPath;
+  String? originalLanguage;
+  String? originalTitle;
+  List<int>? genreIds;
+  String? title;
+  double? voteAverage;
+  String? overview;
+  String? releaseDate;
 
   Results(
       {
@@ -121,20 +121,20 @@ class Results {
 }
 
 class MovieDetails {
-  final bool adult;
-  final String backdropPath;
-  final int budget;
-  final String homepage;
-  final int id;
-  final String imdbId;
-  final String originalLanguage;
-  final String overview;
-  final String title;
-  final String status;
-  final String posterPath;
-  final num voteAverage;
-  final String releaseDate;
-  final num duration;
+  final bool? adult;
+  final String? backdropPath;
+  final int? budget;
+  final String? homepage;
+  final int? id;
+  final String? imdbId;
+  final String? originalLanguage;
+  final String? overview;
+  final String? title;
+  final String? status;
+  final String? posterPath;
+  final num? voteAverage;
+  final String? releaseDate;
+  final num? duration;
 
   MovieDetails({
     this.duration,

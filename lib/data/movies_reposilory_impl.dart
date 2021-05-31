@@ -10,7 +10,7 @@ class MoviesRepositoryImpl implements MoviesRepository {
   MoviesApiProvider moviesApiProvider = MoviesApiProvider();
 
   @override
-  Future<List<Results>> fetchPopularMovies() async {
+  Future<List<Results>?> fetchPopularMovies() async {
     return moviesApiProvider.fetchPopular();
   }
 

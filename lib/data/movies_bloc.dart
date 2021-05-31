@@ -10,8 +10,8 @@ class MoviesBloc {
   Stream<List<Results>> get popularMovies => _moviesFetcher.stream;
 
   fetchPopularMovies() async {
-    List<Results> result = await _repository.fetchPopularMovies();
-    _moviesFetcher.sink.add(result);
+    List<Results>? result = await _repository.fetchPopularMovies();
+    _moviesFetcher.sink.add(result!);
   }
 
   dispose() {

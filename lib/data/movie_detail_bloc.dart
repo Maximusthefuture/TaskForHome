@@ -25,7 +25,7 @@ class MovieDetailBloc {
   _itemTransformer() {
     
     return ScanStreamTransformer(
-      (Future<MovieDetails> movie, int id, int index) {
+      (Future<MovieDetails>? movie, int id, int index) {
         movie = _repository.fetchMovieById(id);
         return movie;
       },

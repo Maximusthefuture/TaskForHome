@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tasks_for_home/data/movies_bloc.dart';
+import 'package:tasks_for_home/domain/json_models.dart';
 import 'package:tasks_for_home/widgets/popular_tv_show.dart';
 
 import 'package:tasks_for_home/widgets/popular_movies.dart';
@@ -58,7 +59,7 @@ class _MoviesTvSeriesState extends State<MoviesTvSeries> {
                   style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16),
                 ),
               ),
-              StreamBuilder(
+              StreamBuilder<List<Results>>(
                 stream: bloc.popularMovies,
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {

@@ -1,6 +1,6 @@
 class BuyList {
-    String item;
-    String category;
+    String? item;
+    String? category;
 
     BuyList({
       this.item,

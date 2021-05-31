@@ -1,5 +1,5 @@
 class WatchList {
-  String movieName;
-  String movieId;
-  String movieIcon;
+  String? movieName;
+  String? movieId;
+  String? movieIcon;
 }

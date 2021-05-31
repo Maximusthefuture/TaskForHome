@@ -6,32 +6,32 @@ import 'package:tasks_for_home/domain/json_models.dart';
 import 'package:tasks_for_home/widgets/movie_details_widget.dart';
 
 class MovieDetailsScreen extends StatefulWidget {
-  final int movieId;
+  final int? movieId;
 
-  const MovieDetailsScreen({Key key, this.movieId}) : super(key: key);
+  const MovieDetailsScreen({key, this.movieId}) : super(key: key);
   @override
   MovieDetailsScreenState createState() {
-    return MovieDetailsScreenState(movieId);
+    return MovieDetailsScreenState(movieId ?? 0);
   }
 }
 
 class MovieDetailsScreenState extends State<MovieDetailsScreen> {
-  final int movieId;
-  MovieDetailBloc bloc;
-  MovieDetails details = MovieDetails();
+  final int? movieId;
+  MovieDetailBloc? bloc;
+  MovieDetails? details = MovieDetails();
 
-  MovieDetailsScreenState(this.movieId);
+   MovieDetailsScreenState(this.movieId);
 
   @override
   void didChangeDependencies() {
     bloc = MovieDetailBlocProvider.of(context);
-    bloc.movieById(movieId);
+    bloc?.movieById(movieId ?? 0);
     super.didChangeDependencies();
   }
 
   @override
   void dispose() {
-    bloc.dispose();
+    bloc?.dispose();
     super.dispose();
   }
 
@@ -40,11 +40,13 @@ class MovieDetailsScreenState extends State<MovieDetailsScreen> {
     return Scaffold(
       body: Container(
           child: StreamBuilder(
-        stream: bloc.movieDetail,
+        stream: bloc?.movieDetail,
         builder: (context, snapshot) {
+           final data = snapshot.data as Future<MovieDetails>;
           if (snapshot.hasData) {
-            return FutureBuilder<MovieDetails>(
-                future: snapshot.data,
+            return FutureBuilder<MovieDetails> (
+               
+                future: data,
                 builder: (context, snapshot) {
                   return MovieDetailsWidget(
                     snapshot: snapshot,

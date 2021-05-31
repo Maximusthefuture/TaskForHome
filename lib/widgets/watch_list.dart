@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class WatchListWidget extends StatelessWidget {
-  var list = List<String>();
+  var list = <String>[];
   @override
   Widget build(BuildContext context) {
     return Container(

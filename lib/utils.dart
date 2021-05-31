@@ -14,7 +14,7 @@ Future selectDate(
       int.parse(dateParts[1]),
       int.parse(dateParts[2]));
   }
-  DateTime picker = await showDatePicker(
+  DateTime? picker = await showDatePicker(
     context: context, 
     initialDate: initDate, 
     firstDate: DateTime(2019), 

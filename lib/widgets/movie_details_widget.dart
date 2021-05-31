@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:tasks_for_home/domain/json_models.dart';
 
 class MovieDetailsWidget extends StatelessWidget {
-  final AsyncSnapshot<MovieDetails> snapshot;
+  final AsyncSnapshot<MovieDetails>? snapshot;
 
-  const MovieDetailsWidget({Key key, this.snapshot}) : super(key: key);
+  const MovieDetailsWidget({ key, this.snapshot}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +28,7 @@ class MovieDetailsWidget extends StatelessWidget {
                   children: [
                     Flexible(
                       child: Text(
-                        "${snapshot.data.title}",
+                        "${snapshot?.data?.title}",
                         textDirection: TextDirection.ltr,
                       ),
                     ),
@@ -39,7 +39,7 @@ class MovieDetailsWidget extends StatelessWidget {
                   ],
                 ),
                 background: Image.network(
-                  "https://image.tmdb.org/t/p/w780${snapshot.data.backdropPath}",
+                  "https://image.tmdb.org/t/p/w780${snapshot?.data?.backdropPath}",
                   fit: BoxFit.cover,
                 ),
               ),
@@ -56,7 +56,7 @@ class MovieDetailsWidget extends StatelessWidget {
                       height: 200,
                       width: 100,
                       child: Image.network(
-                          "https://image.tmdb.org/t/p/w780${snapshot.data.posterPath}"))),
+                          "https://image.tmdb.org/t/p/w780${snapshot?.data?.posterPath}"))),
               Row(
   
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -76,7 +76,7 @@ class MovieDetailsWidget extends StatelessWidget {
                     ),
                     Icon(Icons.share),
                   ]),
-              Text("${snapshot.data.overview}")
+              Text("${snapshot?.data?.overview}")
             ])));
   }
 }

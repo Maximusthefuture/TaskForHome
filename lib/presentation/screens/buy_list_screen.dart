@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:tasks_for_home/presentation/screens/add_edit_todo.dart';
 import 'package:tasks_for_home/widgets/buy_list_cell.dart';
 
 class BuyListScreen extends StatelessWidget {
@@ -12,7 +13,9 @@ class BuyListScreen extends StatelessWidget {
           IconButton(
             icon: Icon(CupertinoIcons.add),
             onPressed: () {
-              // AddEditTodoItem();
+              Navigator.of(context).push(MaterialPageRoute(builder: (_) {
+                  return AddEditTodoItem();
+                }));
             },
           ),
           IconButton(

@@ -15,12 +15,18 @@ class _WatchListState extends State<WatchList> {
     return Scaffold(
         appBar: AppBar(
           title: Text("Watch list"),
+          actions: [IconButton(onPressed: () {
+              //Modaly search 
+          }, icon: Icon(Icons.add))],
+        
         ),
-        body: ListView.builder(
+        body: Container(
+          child:
+          ListView.builder(
           itemCount: 3,
           itemBuilder: (context, index) {
               return Container(child: Text('${items[index]}'),);
           
-        }));
+        })));
   }
 }

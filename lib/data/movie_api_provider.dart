@@ -7,7 +7,12 @@ class MoviesApiProvider {
   static const String _api_key = '6efc87390c4c8501566dd6c4cd3a09c5';
 
 
-  List<PopularTvShows>? getPopularTvShows(String body)  {
+  Future<List<Results>?> fetchTvShows() async {
+    final response = await http.get(Uri.parse("https://api.themoviedb.org/3/tv/popular?api_key=${_api_key}&language=en-US&page=1"));
+    return getPopularTvShows(response.body);
+  }
+
+  List<Results>? getPopularTvShows(String body)  {
      return PopularTvShows.fromJson(json.decode(body)).results;
   }
 

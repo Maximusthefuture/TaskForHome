@@ -14,6 +14,7 @@ class MovieDetailBloc {
 
   MovieDetailBloc() {
     _movieId.stream.transform(_itemTransformer()).pipe(_movieDetails);
+    
   }
 
   dispose() async{
@@ -23,13 +24,12 @@ class MovieDetailBloc {
   }
 
   _itemTransformer() {
-    
-    return ScanStreamTransformer(
-      (Future<MovieDetails>? movie, int id, int index) {
+    return ScanStreamTransformer<int, Future<MovieDetails>>(
+      (movie, id, index) {
         movie = _repository.fetchMovieById(id);
         return movie;
       },
-      null
+      _repository.fetchMovieById(1)
     );
   }
 }

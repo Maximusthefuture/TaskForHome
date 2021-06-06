@@ -1,15 +1,29 @@
 
 class PopularTvShows {
-  List<PopularTvShows>? results;
+   int? page;
+  int? totalResults;
+  int? totalPages;
+  List<Results> ?results;
+  int? id;
+  String? title;
 
   PopularTvShows(
-    {
-      this.results
-    }
-  );
-  PopularTvShows.fromJson(Map<String, dynamic> json) {
+      {this.title,
+      this.id,
+      this.page,
+      this.totalResults,
+      this.totalPages,
+      this.results});
 
-  } 
+  PopularTvShows.fromJson(Map<String, dynamic> json) {
+    page = json['page'];
+    totalResults = json['total_results'];
+    totalPages = json['total_pages'];
+    id = json['id'];
+    title = json['title'];
+    results =
+        List<Results>.from(json['results'].map((it) => Results.fromJson(it)));
+  }
 }
 
 class PopularMovies {

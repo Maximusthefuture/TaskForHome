@@ -18,7 +18,13 @@ class PopularMoviesWidget extends StatelessWidget {
           scrollDirection: Axis.horizontal,
           itemCount: list?.length,
           itemBuilder: (context, index) {
-            return Container(
+            return createWidget(context, list, index);
+          }),
+    );
+  }
+
+  Widget createWidget(BuildContext context, List? list, int index) {
+     return Container(
                 padding: EdgeInsets.symmetric(vertical: 0, horizontal: 2),
                 child: ClipRRect(
                     borderRadius: BorderRadius.circular(20),
@@ -36,7 +42,5 @@ class PopularMoviesWidget extends StatelessWidget {
                       child: Image.network(
                           "https://image.tmdb.org/t/p/w154${list![index].posterPath}"),
                     )));
-          }),
-    );
   }
 }

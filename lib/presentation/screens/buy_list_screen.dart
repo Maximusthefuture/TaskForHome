@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:tasks_for_home/presentation/screens/add_edit_todo.dart';
+import 'package:tasks_for_home/presentation/screens/add_edit_todo_screen.dart';
 import 'package:tasks_for_home/widgets/buy_list_cell.dart';
 
 class BuyListScreen extends StatelessWidget {

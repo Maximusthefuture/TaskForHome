@@ -20,8 +20,7 @@ class MoviesRepositoryImpl implements MoviesRepository {
   }
 
   @override
-  Future<List<PopularTvShows>> fetchPopularTvShows() {
-    // TODO: implement fetchPopularTvShows
-    throw UnimplementedError();
+  Future<List<Results>?> fetchPopularTvShows() {
+    return moviesApiProvider.fetchTvShows();
   }
 }

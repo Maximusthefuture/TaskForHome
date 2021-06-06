@@ -21,6 +21,7 @@ class _MoviesTvSeriesState extends State<MoviesTvSeries> {
   void initState() {
     super.initState();
     bloc.fetchPopularMovies();
+    bloc.fetchPopularTvShows();
   }
 
   @override
@@ -77,7 +78,26 @@ class _MoviesTvSeriesState extends State<MoviesTvSeries> {
                   );
                 },
               ),
-              PopularTvShowWidget()
+              StreamBuilder<List<Results>>(
+                stream: bloc.popularTvShows,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    print("title: ${snapshot.data?.first}");
+                    return PopularTvShowWidget(list: snapshot.data);
+                  } else if (snapshot.hasError) {
+                    print(snapshot.error);
+                    return Text("${snapshot.error}");
+                  } else if (snapshot.connectionState ==
+                      ConnectionState.waiting) {
+                    print(snapshot.error);
+                  }
+
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                },
+              ),
+              Text("Watch list")
             ]));
   }
 }

@@ -26,9 +26,7 @@ class _BuyListCellState extends State<BuyListCell> {
               onChanged: (value) {
                 setState(() {
                   isChecked = value;
-                  print("${value.toString()}");
-                  
-                  
+                  print("${value.toString()}"); 
                 });
                 
               },

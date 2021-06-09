@@ -1,9 +1,44 @@
 
+
+class SearchTmbd {
+  int? page;
+  List<Results>? results;
+  int? totalPages;
+  int? totalResults;
+
+  SearchTmbd({this.page, this.results, this.totalPages, this.totalResults});
+
+  SearchTmbd.fromJson(Map<String, dynamic> json) {
+    page = json['page'];
+    if (json['results'] != null) {
+      results = [];
+      json['results'].forEach((v) {
+        results?.add(new Results.fromJson(v));
+      });
+    }
+    totalPages = json['total_pages'];
+    totalResults = json['total_results'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['page'] = this.page;
+    if (this.results != null) {
+      data['results'] = this.results?.map((v) => v.toJson()).toList();
+    }
+    data['total_pages'] = this.totalPages;
+    data['total_results'] = this.totalResults;
+    return data;
+  }
+}
+
+
+
 class PopularTvShows {
    int? page;
   int? totalResults;
   int? totalPages;
-  List<Results> ?results;
+  List<Results>? results;
   int? id;
   String? title;
 
@@ -79,6 +114,7 @@ class Results {
   double? voteAverage;
   String? overview;
   String? releaseDate;
+  String? profilePath;
 
   Results(
       {
@@ -95,7 +131,8 @@ class Results {
       this.title,
       this.voteAverage,
       this.overview,
-      this.releaseDate});
+      this.releaseDate,
+      this.profilePath});
 
   Results.fromJson(Map<String, dynamic> json) {
     // popularity = json['popularity'];
@@ -112,6 +149,7 @@ class Results {
     voteAverage = json['vote_average'].toDouble();
     overview = json['overview'];
     releaseDate = json['release_date'];
+    profilePath = json['profile_path'];
   }
 
   Map<String, dynamic> toJson() {

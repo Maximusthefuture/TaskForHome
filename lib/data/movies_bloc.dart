@@ -7,7 +7,9 @@ class MoviesBloc {
   final _repository = MoviesRepositoryImpl();
   final _moviesFetcher = PublishSubject<List<Results>>();
   final _tvShowsFetcher = PublishSubject<List<Results>>();
- 
+
+
+  get f => _repository;
   Stream<List<Results>> get popularMovies => _moviesFetcher.stream;
   Stream<List<Results>> get popularTvShows => _tvShowsFetcher.stream;
 

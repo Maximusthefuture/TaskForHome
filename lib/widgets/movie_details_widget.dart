@@ -33,7 +33,7 @@ class MovieDetailsWidget extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      '(2014) 90 min',
+                      '${snapshot?.data?.releaseDate}',
                       style: TextStyle(fontSize: 10),
                     )
                   ],

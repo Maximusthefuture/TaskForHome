@@ -39,14 +39,13 @@ class MovieDetailsScreenState extends State<MovieDetailsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-          child: StreamBuilder<Future<MovieDetails>?> (
+          child: StreamBuilder<Future<MovieDetails>> (
         stream: bloc?.movieDetail,
         builder: (context, snapshot) {
-           var data = snapshot as Future<MovieDetails>;
           if (snapshot.hasData) {
             return FutureBuilder<MovieDetails> (
                 future: snapshot.data,
-                builder: (context, snapshot) {
+                builder: (context,  AsyncSnapshot<MovieDetails> snapshot) {
                   return MovieDetailsWidget(
                     snapshot: snapshot,
                   );

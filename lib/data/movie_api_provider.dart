@@ -16,6 +16,15 @@ class MoviesApiProvider {
      return PopularTvShows.fromJson(json.decode(body)).results;
   }
 
+  List<Results>? searchData(String body) {
+    return SearchTmbd.fromJson(json.decode(body)).results;
+  }
+
+  Future<List<Results>?> getSearchData(String query) async {
+    final response = await http.get(Uri.parse("https://api.themoviedb.org/3/search/multi?api_key=$_api_key}&language=en-US&query=${query}&page=1&include_adult=false"));
+    return searchData(response.body);
+  }
+
   Future<List<Results>?> fetchPopular() async {
     final response = await http
         .get(Uri.parse('https://api.themoviedb.org/3/movie/popular?api_key=${_api_key}'));

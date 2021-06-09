@@ -4,4 +4,6 @@ abstract class MoviesRepository {
   Future<List<Results>?> fetchPopularMovies();
   Future<MovieDetails> fetchMovieById(int id);
   Future<List<Results>?> fetchPopularTvShows();
+  Future<List<Results>?> searchData(String query);
+  // Future<TVShowDetails> fetchTvShowById(int id);
 }

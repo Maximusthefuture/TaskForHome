@@ -43,7 +43,7 @@ class PopularTvShowWidget extends StatelessWidget {
                 print("id: ${list![index].id}");
               },
               child: Image.network(
-                  "https://image.tmdb.org/t/p/w154${list![index].posterPath}"),
+                  "https://image.tmdb.org/t/p/w154${list?[index].posterPath}"),
             )));
   }
 }

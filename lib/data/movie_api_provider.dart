@@ -21,7 +21,7 @@ class MoviesApiProvider {
   }
 
   Future<List<Results>?> getSearchData(String query) async {
-    final response = await http.get(Uri.parse("https://api.themoviedb.org/3/search/multi?api_key=$_api_key}&language=en-US&query=${query}&page=1&include_adult=false"));
+    final response = await http.get(Uri.parse("https://api.themoviedb.org/3/search/multi?api_key=${_api_key}&language=en-US&query=${query}&page=1&include_adult=false"));
     return searchData(response.body);
   }
 

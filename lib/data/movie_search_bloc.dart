@@ -6,12 +6,12 @@ import 'package:tasks_for_home/domain/json_models.dart';
 class MovieSearchBloc {
   final _repository = MoviesRepositoryImpl();
   final _query = PublishSubject<String>();
-  final _movieSearch = PublishSubject<Future<Results>?>();
+  final _movieSearch = PublishSubject<Future<List<Results>?>>();
   Function(String) get query => _query.sink.add;
-  Stream<Future<Results>?> get movieSearch => _movieSearch.stream;
+  Stream<Future<List<Results>?>> get movieSearch => _movieSearch.stream;
 
   MovieSearchBloc() {
-    _query.stream.transform(_itemTransformer()).pipe(_query);
+    _query.stream.transform(_itemTransformer()).pipe(_movieSearch);
   }
 
   dispose() async {

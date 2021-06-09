@@ -115,6 +115,8 @@ class Results {
   String? overview;
   String? releaseDate;
   String? profilePath;
+  String? name;
+
 
   Results(
       {
@@ -132,7 +134,8 @@ class Results {
       this.voteAverage,
       this.overview,
       this.releaseDate,
-      this.profilePath});
+      this.profilePath,
+      this.name });
 
   Results.fromJson(Map<String, dynamic> json) {
     // popularity = json['popularity'];
@@ -150,6 +153,7 @@ class Results {
     overview = json['overview'];
     releaseDate = json['release_date'];
     profilePath = json['profile_path'];
+    name = json['name'];
   }
 
   Map<String, dynamic> toJson() {

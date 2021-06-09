@@ -5,6 +5,7 @@ import 'package:tasks_for_home/domain/json_models.dart';
 
 class MovieSearch extends SearchDelegate {
   List? array;
+  // AsyncSnapshot<List<Results>?> snapshot;
 
   MovieSearch({required this.array});
 
@@ -28,7 +29,11 @@ class MovieSearch extends SearchDelegate {
     // });
     // TODO: implement buildResults
 
-    return MovieSearchWidget(query: query);
+    return MovieSearchBlocProvider(
+      child: MovieSearchWidget(
+        query: query,
+      ),
+    );
 
     // return Text("NULL");
   }
@@ -70,21 +75,49 @@ class _MovieSearchState extends State<MovieSearchWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        child: StreamBuilder<Future<Results>?>(
-                stream: bloc?.movieSearch,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return FutureBuilder<Results>(
-                      future: snapshot.data,
-                      builder: (context, snapshot) {
-                        print("SNAPSHOT DATA${snapshot.data!.originalTitle}");
-                        return Text(snapshot.data.toString());
-                      },
-                    );
-                  } else if(snapshot.hasData) {
-                    print("snapshot error");
-                  }
-                  return CircularProgressIndicator();
-                }));
+        child: StreamBuilder<Future<List<Results>?>>(
+            stream: bloc?.movieSearch,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return FutureBuilder<List<Results>?>(
+                  future: snapshot.data,
+                  builder: (context, snapshot) {
+                    // print("SNAPSHOT DATA${snapshot.data!.originalTitle}");
+                    return ListView.builder(
+                        itemCount: snapshot.data?.length,
+                        itemBuilder: (context, index) {
+                          print("SNAPSHOT ${snapshot.data?.length}");
+                          return MovieSearchResultWidget(snapshot: snapshot.data?.elementAt(index));
+                          return Text(
+                              snapshot.data?.elementAt(index).title ?? "???");
+                        });
+                  },
+                );
+              } else if (snapshot.hasError) {
+                print("snapshot error");
+              }
+              return CircularProgressIndicator();
+            }));
+  }
+}
+
+class MovieSearchResultWidget extends StatelessWidget {
+  final Results? snapshot;
+  const MovieSearchResultWidget({key, this.snapshot}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        child: Row(children: [
+          Container(
+            height: 100,
+            width: 100,
+            child:
+      Image.network(
+        "https://image.tmdb.org/t/p/w780${snapshot?.posterPath ?? snapshot?.backdropPath}",
+        fit: BoxFit.cover,
+      )),
+      Text("${snapshot?.title ?? snapshot?.name}"),
+    ]));
   }
 }

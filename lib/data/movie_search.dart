@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:tasks_for_home/data/authentication.dart';
 import 'package:tasks_for_home/data/movie_search_bloc.dart';
 import 'package:tasks_for_home/data/movie_search_bloc_provider.dart';
+import 'package:tasks_for_home/data/watch_list_model.dart';
 import 'package:tasks_for_home/domain/json_models.dart';
 
 class MovieSearch extends SearchDelegate {
@@ -17,18 +19,16 @@ class MovieSearch extends SearchDelegate {
 
   @override
   Widget buildLeading(BuildContext context) {
-    // TODO: implement buildLeading
-
-    return Text("");
+    return IconButton(
+      icon: Icon(Icons.arrow_back),
+      onPressed: () {
+        close(context, array ?? "null");
+      },
+    );
   }
 
   @override
   Widget buildResults(BuildContext context) {
-    // var result = array?.where((element) {
-    //   return element.toLowerCase().contains(query.toLowerCase());
-    // });
-    // TODO: implement buildResults
-
     return MovieSearchBlocProvider(
       child: MovieSearchWidget(
         query: query,
@@ -87,9 +87,8 @@ class _MovieSearchState extends State<MovieSearchWidget> {
                         itemCount: snapshot.data?.length,
                         itemBuilder: (context, index) {
                           print("SNAPSHOT ${snapshot.data?.length}");
-                          return MovieSearchResultWidget(snapshot: snapshot.data?.elementAt(index));
-                          return Text(
-                              snapshot.data?.elementAt(index).title ?? "???");
+                          return MovieSearchResultWidget(
+                              snapshot: snapshot.data?.elementAt(index));
                         });
                   },
                 );
@@ -103,21 +102,37 @@ class _MovieSearchState extends State<MovieSearchWidget> {
 
 class MovieSearchResultWidget extends StatelessWidget {
   final Results? snapshot;
+
   const MovieSearchResultWidget({key, this.snapshot}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        child: Row(children: [
-          Container(
-            height: 100,
-            width: 100,
-            child:
-      Image.network(
-        "https://image.tmdb.org/t/p/w780${snapshot?.posterPath ?? snapshot?.backdropPath}",
-        fit: BoxFit.cover,
-      )),
-      Text("${snapshot?.title ?? snapshot?.name}"),
-    ]));
+        child: 
+        // Consumer<LoginState>(
+        //     builder: (context, appState, _) => Column(children: [
+        //       if (appState.loginState == ApplicationLoginState.loggedIn) ... [
+
+              
+        //           GestureDetector(onTap: () {
+                    
+        //             print("TAPPED");
+        //           }),
+
+        //           //add to list here!
+        //           //сразу добавляем в закладки?
+        //       ],
+                  Container(
+                      child: Row(children: [
+                    Container(
+                        height: 100,
+                        width: 100,
+                        child: Image.network(
+                          "https://image.tmdb.org/t/p/w780${snapshot?.posterPath ?? snapshot?.backdropPath}",
+                          fit: BoxFit.cover,
+                        )),
+                    Text("${snapshot?.title ?? snapshot?.name}"),
+                  ]))
+                );
   }
 }

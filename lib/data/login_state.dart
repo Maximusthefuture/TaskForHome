@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tasks_for_home/data/authentication.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:tasks_for_home/data/watch_list_model.dart';
 
 class LoginState extends ChangeNotifier {
   ApplicationLoginState _loginState = ApplicationLoginState.loggedOut;
@@ -11,8 +14,24 @@ class LoginState extends ChangeNotifier {
   String? _email;
   String get email => _email ?? "";
 
+  StreamSubscription<QuerySnapshot>? _watchListSubscription;
+  List<WatchListData> _watchList = [];
+  List<WatchListData> get watchList => _watchList;
+
   LoginState() {
     init();
+  }
+
+  Future<DocumentReference> addToWatchList(List list) {
+    if (_loginState != ApplicationLoginState.loggedIn) {
+      throw Exception("Must be logged in");
+    }
+    CollectionReference watchList =
+        FirebaseFirestore.instance.collection('watch_list');
+    return watchList.add({
+      'recommendation': list,
+      'name': FirebaseAuth.instance.currentUser!.displayName
+    });
   }
 
   Future<void> init() async {
@@ -20,13 +39,26 @@ class LoginState extends ChangeNotifier {
 
     FirebaseAuth.instance.userChanges().listen((user) {
       if (user != null) {
+        _watchListSubscription = FirebaseFirestore.instance
+            .collection('watch_list')
+            .snapshots()
+            .listen((snapshot) {
+          _watchList = [];
+          snapshot.docs.forEach((element) {
+            var data = element.data();
+            _watchList.add(WatchListData(
+                name: data['name'], movieList: data['recommendation']));
+          });
+          notifyListeners();
+        });
         _loginState = ApplicationLoginState.loggedIn;
       } else {
-      _loginState = ApplicationLoginState.loggedOut;
+        _loginState = ApplicationLoginState.loggedOut;
+        _watchList = [];
+        _watchListSubscription?.cancel();
       }
       notifyListeners();
     });
-
   }
 
   void startLoginFlow() {

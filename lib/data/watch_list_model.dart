@@ -3,7 +3,7 @@ import 'package:tasks_for_home/domain/watch_list.dart';
 
 class WatchListData {
   final dynamic name;
-  final dynamic movieList;
+  final List movieList;
 
   WatchListData({required this.name, required this.movieList});
 }

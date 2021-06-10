@@ -41,7 +41,7 @@ class SettingWidget extends StatelessWidget {
                     }),
               ),
               Container(
-                height: 100,
+                height: 300,
                 width: 300,
                 child: Consumer<LoginState>(
                   builder: (context, appState, _) => Authentication(
@@ -50,7 +50,7 @@ class SettingWidget extends StatelessWidget {
                     startLoginFlow: appState.startLoginFlow,
                     verifyEmail: appState.verifyEmail,
                     signInWithEmailAndPassword:
-                        appState.singInWithEmailAndPassword,
+                    appState.singInWithEmailAndPassword,
                     cancelRegistration: appState.cancelRegistration,
                     registerAccount: appState.registerAccount,
                     signOut: appState.signOut,

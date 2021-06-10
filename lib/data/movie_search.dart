@@ -1,9 +1,14 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tasks_for_home/data/authentication.dart';
 import 'package:tasks_for_home/data/movie_search_bloc.dart';
 import 'package:tasks_for_home/data/movie_search_bloc_provider.dart';
 import 'package:tasks_for_home/data/watch_list_model.dart';
 import 'package:tasks_for_home/domain/json_models.dart';
+
+import 'login_state.dart';
 
 class MovieSearch extends SearchDelegate {
   List? array;
@@ -29,11 +34,13 @@ class MovieSearch extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    return MovieSearchBlocProvider(
-      child: MovieSearchWidget(
-        query: query,
-      ),
-    );
+    return ChangeNotifierProvider<LoginState>(
+        create: (context) => LoginState(),
+        builder: (context, _) => MovieSearchBlocProvider(
+              child: MovieSearchWidget(
+                query: query,
+              ),
+            ));
 
     // return Text("NULL");
   }
@@ -100,39 +107,47 @@ class _MovieSearchState extends State<MovieSearchWidget> {
   }
 }
 
+ someMethod(LoginState appState, Results? snapshot) {
+   appState.addToWatchList([snapshot?.posterPath]);
+  
+}
+
 class MovieSearchResultWidget extends StatelessWidget {
   final Results? snapshot;
 
   const MovieSearchResultWidget({key, this.snapshot}) : super(key: key);
-
+  // FutureOr<void> Function(String message) addMessage;
   @override
   Widget build(BuildContext context) {
+    var provider = Provider.of<LoginState>(context, listen: true);
+    
     return Container(
-        child: 
-        // Consumer<LoginState>(
-        //     builder: (context, appState, _) => Column(children: [
-        //       if (appState.loginState == ApplicationLoginState.loggedIn) ... [
-
-              
-        //           GestureDetector(onTap: () {
-                    
-        //             print("TAPPED");
-        //           }),
-
-        //           //add to list here!
-        //           //сразу добавляем в закладки?
-        //       ],
-                  Container(
-                      child: Row(children: [
-                    Container(
-                        height: 100,
-                        width: 100,
-                        child: Image.network(
-                          "https://image.tmdb.org/t/p/w780${snapshot?.posterPath ?? snapshot?.backdropPath}",
-                          fit: BoxFit.cover,
-                        )),
-                    Text("${snapshot?.title ?? snapshot?.name}"),
-                  ]))
-                );
+        child: GestureDetector(
+            onTap: () => someMethod(provider, snapshot),
+            // {
+            //   Container(child: 
+            //    Consumer<LoginState>(
+            //       builder: (context, appState, _) =>
+            //           // if (appState.loginState ==
+            //           //     ApplicationLoginState.loggedIn) ...[
+            //            someMethod(appState, snapshot)
+            //       // ],
+            //       //add to list here!
+            //       //сразу добавляем в закладки?
+            //       ));
+            //        print("TAPPED");
+            // },
+            
+            child: Container(
+                child: Row(children: [
+              Container(
+                  height: 100,
+                  width: 100,
+                  child: Image.network(
+                    "https://image.tmdb.org/t/p/w780${snapshot?.posterPath ?? snapshot?.backdropPath}",
+                    fit: BoxFit.cover,
+                  )),
+              Text("${snapshot?.title ?? snapshot?.name}"),
+            ]))));
   }
 }

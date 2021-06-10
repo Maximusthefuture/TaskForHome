@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tasks_for_home/data/login_state.dart';
 import 'package:tasks_for_home/data/movies_bloc.dart';
 import 'package:tasks_for_home/domain/json_models.dart';
 import 'package:tasks_for_home/widgets/popular_tv_show.dart';
@@ -36,15 +38,17 @@ class _MoviesTvSeriesState extends State<MoviesTvSeries> {
         appBar: AppBar(
           title: Text('Развлечения'),
           actions: <Widget>[
-            IconButton(icon: Icon(Icons.search),
-            onPressed: () {
-                
-            },),
+            IconButton(
+              icon: Icon(Icons.search),
+              onPressed: () {},
+            ),
             IconButton(
               icon: Icon(Icons.album),
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(builder: (_) {
-                  return WatchList();
+                  return ChangeNotifierProvider<LoginState>(
+                      create: (context) => LoginState(),
+                      builder: (context, _) => WatchList());
                 }));
               },
             ),

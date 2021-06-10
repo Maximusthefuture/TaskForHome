@@ -7,6 +7,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:tasks_for_home/data/watch_list_model.dart';
+import 'package:tasks_for_home/domain/watch_list.dart';
 
 class LoginState extends ChangeNotifier {
   ApplicationLoginState _loginState = ApplicationLoginState.loggedOut;
@@ -20,18 +21,42 @@ class LoginState extends ChangeNotifier {
 
   LoginState() {
     init();
+    
   }
 
-  Future<DocumentReference> addToWatchList(List list) {
+  Future<void> addToWatchList(List list) async  {
     if (_loginState != ApplicationLoginState.loggedIn) {
       throw Exception("Must be logged in");
     }
-    CollectionReference watchList =
-        FirebaseFirestore.instance.collection('watch_list');
-    return watchList.add({
-      'recommendation': list,
-      'name': FirebaseAuth.instance.currentUser!.displayName
-    });
+    DocumentReference watchList =
+        FirebaseFirestore.instance.collection('watch_list').doc(FirebaseAuth.instance.currentUser?.displayName);
+
+        DocumentSnapshot doc = await watchList.get();
+        
+
+        if (!doc.exists) {
+          watchList.set({
+          'name': FirebaseAuth.instance.currentUser?.displayName,
+          'recommendation' : list
+        });
+        }
+        // List docData = doc.data();
+        if (!list.contains(doc["recommendation"])) {
+            return watchList.update({
+              'recommendation': FieldValue.arrayUnion(list)
+            }
+            );
+        } else {
+            return watchList.set({
+              'recommendation': FieldValue.arrayUnion(list)
+            }
+            );
+        }
+
+    // return watchList.update({
+    //   'recommendation': list,
+    //   'name': FirebaseAuth.instance.currentUser!.displayName
+    // });
   }
 
   Future<void> init() async {

@@ -8,7 +8,9 @@ import "package:provider/provider.dart";
 
 import 'data/login_state.dart';
 
-void main() => runApp(Home());
+void main() => runApp(ChangeNotifierProvider<LoginState>(
+      create: (context) => LoginState(),
+      builder: (context, _) => Home()));
 
 
 class Home extends StatefulWidget {
@@ -42,7 +44,8 @@ class HomeState extends State<Home> {
       ),
       label: "Настройки",
     );
-    return MaterialApp(
+    return 
+    MaterialApp(
       home: Scaffold(
         // appBar: AppBar(
         //   title: Text("Home app"),

@@ -46,9 +46,7 @@ class _MoviesTvSeriesState extends State<MoviesTvSeries> {
               icon: Icon(Icons.album),
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(builder: (_) {
-                  return ChangeNotifierProvider<LoginState>(
-                      create: (context) => LoginState(),
-                      builder: (context, _) => WatchList());
+                  return  WatchList();
                 }));
               },
             ),

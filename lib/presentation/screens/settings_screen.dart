@@ -9,10 +9,8 @@ class SettingsScreeen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<LoginState>(
-      create: (context) => LoginState(),
-      builder: (context, _) => SettingWidget(),
-    );
+    return SettingWidget()
+    ;
   }
 }
 

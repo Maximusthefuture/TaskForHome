@@ -60,7 +60,7 @@ class LoginState extends ChangeNotifier {
   }
 
   Future<void> init() async {
-    await Firebase.initializeApp();
+    // await Firebase.initializeApp();
 
     FirebaseAuth.instance.userChanges().listen((user) {
       if (user != null) {

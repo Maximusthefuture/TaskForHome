@@ -5,12 +5,16 @@ import 'package:tasks_for_home/presentation/screens/movies_series.dart';
 import 'package:tasks_for_home/presentation/screens/reminder_screen.dart';
 import 'package:tasks_for_home/presentation/screens/settings_screen.dart';
 import "package:provider/provider.dart";
-
+import 'package:firebase_core/firebase_core.dart';
 import 'data/login_state.dart';
 
-void main() => runApp(ChangeNotifierProvider<LoginState>(
+void main() async {
+   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+runApp(ChangeNotifierProvider<LoginState>(
       create: (context) => LoginState(),
       builder: (context, _) => Home()));
+      }
 
 
 class Home extends StatefulWidget {

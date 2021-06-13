@@ -18,9 +18,13 @@ class MovieSearch extends SearchDelegate {
 
   @override
   List<Widget> buildActions(BuildContext context) {
-    return [IconButton(onPressed: () {
-        query = '';
-    }, icon: Icon(Icons.clear))];
+    return [
+      IconButton(
+          onPressed: () {
+            query = '';
+          },
+          icon: Icon(Icons.clear))
+    ];
   }
 
   @override
@@ -108,37 +112,21 @@ class _MovieSearchState extends State<MovieSearchWidget> {
   }
 }
 
- someMethod(LoginState appState, Results? snapshot) {
-   appState.addToWatchList([snapshot?.posterPath]);
-  
+someMethod(LoginState appState, Results? snapshot) {
+  appState.addToWatchList([snapshot?.posterPath]);
 }
 
 class MovieSearchResultWidget extends StatelessWidget {
   final Results? snapshot;
 
   const MovieSearchResultWidget({key, this.snapshot}) : super(key: key);
-  // FutureOr<void> Function(String message) addMessage;
   @override
   Widget build(BuildContext context) {
     var provider = Provider.of<LoginState>(context, listen: true);
-    
+
     return Container(
         child: GestureDetector(
             onTap: () => someMethod(provider, snapshot),
-            // {
-            //   Container(child: 
-            //    Consumer<LoginState>(
-            //       builder: (context, appState, _) =>
-            //           // if (appState.loginState ==
-            //           //     ApplicationLoginState.loggedIn) ...[
-            //            someMethod(appState, snapshot)
-            //       // ],
-            //       //add to list here!
-            //       //сразу добавляем в закладки?
-            //       ));
-            //        print("TAPPED");
-            // },
-            
             child: Container(
                 child: Row(children: [
               Container(

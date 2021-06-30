@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tasks_for_home/data/login_state.dart';
+import 'package:tasks_for_home/data/movie_search.dart';
 import 'package:tasks_for_home/data/movies_bloc.dart';
 import 'package:tasks_for_home/domain/json_models.dart';
 import 'package:tasks_for_home/widgets/popular_tv_show.dart';
@@ -40,7 +41,9 @@ class _MoviesTvSeriesState extends State<MoviesTvSeries> {
           actions: <Widget>[
             IconButton(
               icon: Icon(Icons.search),
-              onPressed: () {},
+              onPressed: () {
+                showSearch(context: context, delegate: MovieSearch(array:[]));
+              },
             ),
             IconButton(
               icon: Icon(Icons.album),

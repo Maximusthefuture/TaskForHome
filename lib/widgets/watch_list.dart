@@ -9,11 +9,14 @@ import 'package:tasks_for_home/data/watch_list_model.dart';
 import 'package:tasks_for_home/domain/watch_list.dart';
 
 class WatchListWidget extends StatelessWidget {
-  var list = <String>[];
+  List<WatchListModel>? list;
+  WatchListWidget({this.list});
+
   @override
   Widget build(BuildContext context) {
     return Container(
       child: Watch(),
+      
     );
   }
 }
@@ -25,12 +28,25 @@ Future getSize() async {
   return productCollection;
 }
 
+Stream<List<DocumentSnapshot>> merge(Stream<List<QuerySnapshot>> streamFromStreamZip) {
+  return streamFromStreamZip.map((List<QuerySnapshot> list) {
+    return list.fold([], (distinctList, snapshot) {
+      snapshot.docs.forEach((DocumentSnapshot doc) {
+          distinctList.add(doc);
+      });
+      return distinctList;
+    });
+  });
+}
+
 Stream<QuerySnapshot> getDocs() {
   var watchList =
       FirebaseFirestore.instance.collection('watch_list').snapshots();
       
   return watchList;
 }
+
+
 
 class Watch extends StatefulWidget {
 
@@ -75,10 +91,38 @@ class WatchState extends State<StatefulWidget> {
                       builder: (context, AsyncSnapshot snapshot) {
                         QuerySnapshot snap = snapshot.data;
                         List<DocumentSnapshot> document = snap.docs;
+                        
                         return createWidget(context, document, index);
                       }));
             }));
   }
+
+Widget gridView(BuildContext context , List<WatchListModel> array, int some) {
+  return GridView.builder(
+    itemCount: array.length,
+     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+      crossAxisCount: MediaQuery.of(context).orientation ==
+          Orientation.landscape ? 3: 2,
+      crossAxisSpacing: 8,
+      mainAxisSpacing: 8,
+    childAspectRatio: (2 / 1),
+  ),
+  itemBuilder: (context, index) {
+    print(array[index]);
+    return Container(
+                  height: 200,
+                  width: 200,
+                  child: Image.network(
+                    "https://image.tmdb.org/t/p/w780${array[index].movieIcon}",
+                  ));
+    
+  },
+
+
+
+  );
+
+  
 }
 
 Widget createWidget(BuildContext context, List array, int index) {
@@ -86,6 +130,9 @@ Widget createWidget(BuildContext context, List array, int index) {
   DocumentSnapshot doc = array[index];
   var list = doc['recommendation'];
   var name = doc['name'];
+ 
+
+  
   return Container(
       padding: EdgeInsets.all(8),
 
@@ -101,17 +148,25 @@ Widget createWidget(BuildContext context, List array, int index) {
       //     print("id: ${list![index].id}");
       //   },
       child: ListView.builder(
+        
           scrollDirection: Axis.horizontal,
           itemCount: list.length,
           itemBuilder: (ctx, index) {
             return Column(children: [
               Container(
+                  
                   width: 150,
                   height: 150,
                   child: Image.network(
                     "https://image.tmdb.org/t/p/w780${list[index]}",
+                    
                   )),
               Text(name),
-            ]);
+             
+              // reducedList,
+            ]
+            );
+           
           }));
+}
 }

@@ -2,11 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tasks_for_home/data/authentication.dart';
 import 'package:tasks_for_home/data/movie_search_bloc.dart';
 import 'package:tasks_for_home/data/movie_search_bloc_provider.dart';
-import 'package:tasks_for_home/data/watch_list_model.dart';
 import 'package:tasks_for_home/domain/json_models.dart';
+import 'package:tasks_for_home/domain/watch_list.dart';
 
 import 'login_state.dart';
 
@@ -112,12 +111,19 @@ class _MovieSearchState extends State<MovieSearchWidget> {
   }
 }
 
-someMethod(LoginState appState, Results? snapshot) {
-  appState.addToWatchList([snapshot?.posterPath]);
+void addToWatchList(LoginState appState, Results? snapshot, BuildContext context) {
+  // appState.addToWatchList([snapshot?.posterPath]);
+  var userName = "SomeShit";
+  final snackBar = SnackBar(content: Text("${snapshot?.name ?? snapshot?.originalTitle} added to watch list"));
+  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  List<String?> array = [];
+  array.add(snapshot?.backdropPath);
+  appState.addWatchList(WatchListModel(name: userName, movieIcon:snapshot?.posterPath, array: array));
 }
 
 class MovieSearchResultWidget extends StatelessWidget {
   final Results? snapshot;
+  
 
   const MovieSearchResultWidget({key, this.snapshot}) : super(key: key);
   @override
@@ -126,7 +132,7 @@ class MovieSearchResultWidget extends StatelessWidget {
 
     return Container(
         child: GestureDetector(
-            onTap: () => someMethod(provider, snapshot),
+            onTap: () => addToWatchList(provider, snapshot, context),
             child: Container(
                 child: Row(children: [
               Container(

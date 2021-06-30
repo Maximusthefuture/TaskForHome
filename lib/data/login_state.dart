@@ -24,6 +24,16 @@ class LoginState extends ChangeNotifier {
     
   }
 
+  Future<void> addWatchList(WatchListModel watchList) {
+    final restaurants = FirebaseFirestore.instance.collection('watch_list');
+  return restaurants.add({
+    'name': watchList.name,
+    'posterPath': watchList.movieIcon,
+    'array':watchList.array
+  });
+  
+  }
+
   Future<void> addToWatchList(List list) async  {
     if (_loginState != ApplicationLoginState.loggedIn) {
       throw Exception("Must be logged in");

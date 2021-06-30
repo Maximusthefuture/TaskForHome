@@ -16,8 +16,8 @@ class LoginState extends ChangeNotifier {
   String get email => _email ?? "";
 
   StreamSubscription<QuerySnapshot>? _watchListSubscription;
-  List<WatchListData> _watchList = [];
-  List<WatchListData> get watchList => _watchList;
+  List<WatchListModel> _watchList = [];
+  List<WatchListModel> get watchList => _watchList;
 
   LoginState() {
     init();
@@ -29,9 +29,9 @@ class LoginState extends ChangeNotifier {
   return restaurants.add({
     'name': watchList.name,
     'posterPath': watchList.movieIcon,
-    'array':watchList.array
+    
   });
-  
+
   }
 
   Future<void> addToWatchList(List list) async  {
@@ -81,8 +81,8 @@ class LoginState extends ChangeNotifier {
           _watchList = [];
           snapshot.docs.forEach((element) {
             var data = element.data();
-            _watchList.add(WatchListData(
-                name: data['name'], movieList: data['recommendation']));
+            _watchList.add(WatchListModel(
+                name: data['name'], movieIcon: data['posterPath']));
           });
           notifyListeners();
         });

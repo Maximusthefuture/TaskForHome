@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tasks_for_home/data/movie_search_bloc.dart';
@@ -113,12 +114,10 @@ class _MovieSearchState extends State<MovieSearchWidget> {
 
 void addToWatchList(LoginState appState, Results? snapshot, BuildContext context) {
   // appState.addToWatchList([snapshot?.posterPath]);
-  var userName = "SomeShit";
   final snackBar = SnackBar(content: Text("${snapshot?.name ?? snapshot?.originalTitle} added to watch list"));
   ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  List<String?> array = [];
-  array.add(snapshot?.backdropPath);
-  appState.addWatchList(WatchListModel(name: userName, movieIcon:snapshot?.posterPath, array: array));
+  var name = FirebaseAuth.instance.currentUser?.displayName;
+  appState.addWatchList(WatchListModel(name: name, movieIcon:snapshot?.posterPath));
 }
 
 class MovieSearchResultWidget extends StatelessWidget {

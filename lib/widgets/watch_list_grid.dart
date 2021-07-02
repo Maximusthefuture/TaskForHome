@@ -1,7 +1,6 @@
 
 
 import 'package:flutter/material.dart';
-import 'package:responsive_grid/responsive_grid.dart';
 import 'package:tasks_for_home/domain/watch_list.dart';
 import 'package:tasks_for_home/widgets/watch_list_card.dart';
 import 'dart:math' as math;

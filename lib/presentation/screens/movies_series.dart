@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:tasks_for_home/data/login_state.dart';
 import 'package:tasks_for_home/data/movie_search.dart';
 import 'package:tasks_for_home/data/movies_bloc.dart';
+import 'package:tasks_for_home/data/tv_show_bloc.dart';
 import 'package:tasks_for_home/domain/json_models.dart';
 import 'package:tasks_for_home/widgets/popular_tv_show.dart';
 
@@ -19,17 +20,20 @@ class MoviesTvSeries extends StatefulWidget {
 class _MoviesTvSeriesState extends State<MoviesTvSeries> {
   // final MoviesRepositoryImpl repositoryImpl = MoviesRepositoryImpl();
   final MoviesBloc bloc = MoviesBloc();
+  final TVShowBloc tvShowBloc = TVShowBloc();
+  
 
   @override
   void initState() {
     super.initState();
     bloc.fetchPopularMovies();
-    bloc.fetchPopularTvShows();
+    tvShowBloc.fetchPopularTvShows();
   }
 
   @override
   void dispose() {
     bloc.dispose();
+    tvShowBloc.dispose();
     super.dispose();
   }
 
@@ -84,9 +88,10 @@ class _MoviesTvSeriesState extends State<MoviesTvSeries> {
                 },
               ),
               StreamBuilder<List<Results>>(
-                stream: bloc.popularTvShows,
+                stream: tvShowBloc.popularTvShows,
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
+                    print("ITS OKEY SHOW");
                     print("title: ${snapshot.data?.first}");
                     return PopularTvShowWidget(list: snapshot.data);
                   } else if (snapshot.hasError) {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tasks_for_home/data/movie_search_bloc.dart';
 
-class MovieSearchBlocProvider extends InheritedWidget{
+class MovieSearchBlocProvider extends InheritedWidget {
   final MovieSearchBloc? bloc;
 
   MovieSearchBlocProvider({key, child})

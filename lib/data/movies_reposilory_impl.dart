@@ -28,4 +28,9 @@ class MoviesRepositoryImpl implements MoviesRepository {
   Future<List<Results>?> searchData(String query) {
       return moviesApiProvider.getSearchData(query);
   }
+
+  @override
+  Future<MovieDetails> fetchTvShowById(int id) {
+    return moviesApiProvider.fetchTvShowById(id);
+  }
 }

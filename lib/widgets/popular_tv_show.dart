@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tasks_for_home/data/movie_detail_bloc_provider.dart';
+import 'package:tasks_for_home/data/tvshow_detail_bloc_provider.dart';
 import 'package:tasks_for_home/domain/json_models.dart';
 import 'package:tasks_for_home/presentation/screens/movie_detail_screen.dart';
+import 'package:tasks_for_home/presentation/screens/tv_show_detail_screen.dart';
 
 class PopularTvShowWidget extends StatelessWidget {
   final List<Results>? list;
@@ -37,8 +39,8 @@ class PopularTvShowWidget extends StatelessWidget {
             child: GestureDetector(
               onTapUp: (_) {
                 Navigator.of(context).push(MaterialPageRoute(builder: (_) {
-                  return MovieDetailBlocProvider(
-                      child: MovieDetailsScreen(movieId: list![index].id));
+                  return TvShowDetailBlocProvider(
+                      child: TVShowDetailsScreen(movieId: list?[index].id));
                 }));
                 print("id: ${list![index].id}");
               },

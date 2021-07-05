@@ -18,7 +18,7 @@ class BuyList {
     BuyList({
       this.item,
       this.category,
-      this.isChecked});
+      this.isChecked = false});
 
       BuyList.fromSnapshot(DocumentSnapshot snapshot)
       : assert(snapshot != null),

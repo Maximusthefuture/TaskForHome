@@ -24,20 +24,25 @@ class _BuyListScreenState extends State<BuyListScreen> {
   StreamSubscription<QuerySnapshot>? _streamSubscription;
 
   void _updateWatchList(QuerySnapshot snapshot) {
-    setState(() {
-      buyList = repository.getItemFromQuery(snapshot);
-    });
+   
+      setState(() {
+        buyList = repository.getItemFromQuery(snapshot);
+      });
+
   }
 
   _BuyListScreenState() {
+    // if (!showCheckedItems) {
     _streamSubscription = repository.getAllTodoItems().listen(_updateWatchList);
+    // } else {
+      // _streamSubscription = repository.getDoneItems().listen(_updateWatchList);
+    // }
   }
 
-  String? category = "Дом";
-  // List<BuyList> buyList = [];
+  String category = "Home";
   BuyList? buyListModel;
-  String dropdownValue = 'Дом';
-  List<String> list = <String>["Home", "Study", "Work", "SomeList"];
+  bool showCheckedItems = false;
+  List<String> list = <String>["Home", "Study", "Work", "Buy", "Clean"];
   final myController = TextEditingController();
   FocusNode? focusNode;
   @override
@@ -68,7 +73,12 @@ class _BuyListScreenState extends State<BuyListScreen> {
           ),
           IconButton(
             icon: Icon(Icons.plus_one_sharp),
-            onPressed: () {},
+            onPressed: () {
+              setState(() {
+                showCheckedItems = !showCheckedItems;
+                print(showCheckedItems);
+              });
+            },
           ),
         ],
       ),
@@ -77,18 +87,26 @@ class _BuyListScreenState extends State<BuyListScreen> {
             itemCount: buyList.length,
             itemBuilder: (BuildContext context, int index) {
               var item = buyList[index];
-              return Dismissible(
-                  key: Key("f"),
-                  onDismissed: (direction) {
-                    setState(() {
-                      buyList.removeAt(index);
-                    });
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text("Deleted"),
-                    ));
-                  },
-                  background: Container(color: Colors.red),
-                  child: BuyListCell(item));
+              if (!item.isChecked!) {
+                return Dismissible(
+                    key: Key("f"),
+                    onDismissed: (direction) {
+                      setState(() {
+                        buyList.removeAt(index);
+                        // item.isChecked = false;
+                        provider.updateTodoData(item.reference!.id, true);
+                      });
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text("Deleted"),
+                      ));
+                    },
+                    background: Container(color: Colors.red),
+                    child: BuyListCell(item));
+              } else if (item.isChecked! && showCheckedItems) {
+                return BuyListCell(item);
+              }
+              return Container();
+              // return Container();
             }),
       ),
     );
@@ -149,10 +167,11 @@ class _BuyListScreenState extends State<BuyListScreen> {
     showDialog(
         context: context,
         builder: (builder) {
+          // String dropdownValue = 'Дом';
           return StatefulBuilder(builder: (context, myState) {
             return AlertDialog(
                 content: DropdownButton<String>(
-                    value: list[0],
+                    value: category,
                     icon: const Icon(Icons.arrow_downward),
                     iconSize: 24,
                     elevation: 16,
@@ -163,8 +182,8 @@ class _BuyListScreenState extends State<BuyListScreen> {
                     ),
                     onChanged: (String? newValue) {
                       myState(() {
-                        dropdownValue = newValue!;
-                        category = newValue;
+                        // dropdownValue = newValue!;
+                        category = newValue!;
                         print("Category $category");
                       });
                     },

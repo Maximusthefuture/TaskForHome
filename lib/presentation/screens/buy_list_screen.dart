@@ -41,9 +41,6 @@ class _BuyListScreenState extends State<BuyListScreen> {
           IconButton(
             icon: Icon(CupertinoIcons.add),
             onPressed: () {
-              // Navigator.of(context).push(MaterialPageRoute(builder: (_) {
-              //     return AddEditTodoItem();
-              //   }));
               showAddItemMenu(context, myController);
             },
           ),
@@ -57,8 +54,19 @@ class _BuyListScreenState extends State<BuyListScreen> {
         child: ListView.builder(
             itemCount: buyList.length,
             itemBuilder: (BuildContext context, int index) {
-              //  buyList.map((e) => BuyListCell());
-              return BuyListCell(buyList[index]);
+              var item = buyList[index];
+              return Dismissible(key: 
+              Key("f"), 
+              onDismissed: (direction) {
+                setState(() {
+                  buyList.removeAt(index);
+                });
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Deleted"),));
+              },
+              background: Container(color: Colors.red, child: Text("Deleting"),),
+              child:
+               BuyListCell(item)); 
+              
             }),
       ),
     );
@@ -117,7 +125,8 @@ class _BuyListScreenState extends State<BuyListScreen> {
                                         (String value) {
                                       return DropdownMenuItem<String>(
                                         value: value,
-                                        child: Text(value),
+                                        child: 
+                                        Text(value),
                                       );
                                     }).toList()));
                           });

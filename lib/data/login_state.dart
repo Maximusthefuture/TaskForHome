@@ -21,57 +21,17 @@ class LoginState extends ChangeNotifier {
 
   LoginState() {
     init();
-    
   }
 
   Future<void> addWatchList(WatchListModel watchList) {
     final restaurants = FirebaseFirestore.instance.collection('watch_list');
-  return restaurants.add({
-    'name': watchList.name,
-    'posterPath': watchList.movieIcon,
-    
-  });
-
-  }
-
-  Future<void> addToWatchList(List list) async  {
-    if (_loginState != ApplicationLoginState.loggedIn) {
-      throw Exception("Must be logged in");
-    }
-    DocumentReference watchList =
-        FirebaseFirestore.instance.collection('watch_list').doc(FirebaseAuth.instance.currentUser?.displayName);
-
-        DocumentSnapshot doc = await watchList.get();
-        
-
-        if (!doc.exists) {
-          watchList.set({
-          'name': FirebaseAuth.instance.currentUser?.displayName,
-          'recommendation' : list
-        });
-        }
-        // List docData = doc.data();
-        if (!list.contains(doc["recommendation"])) {
-            return watchList.update({
-              'recommendation': FieldValue.arrayUnion(list)
-            }
-            );
-        } else {
-            return watchList.set({
-              'recommendation': FieldValue.arrayUnion(list)
-            }
-            );
-        }
-
-    // return watchList.update({
-    //   'recommendation': list,
-    //   'name': FirebaseAuth.instance.currentUser!.displayName
-    // });
+    return restaurants.add({
+      'name': watchList.name,
+      'posterPath': watchList.movieIcon,
+    });
   }
 
   Future<void> init() async {
-    // await Firebase.initializeApp();
-
     FirebaseAuth.instance.userChanges().listen((user) {
       if (user != null) {
         _watchListSubscription = FirebaseFirestore.instance

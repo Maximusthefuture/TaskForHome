@@ -17,6 +17,7 @@ class _BuyListScreenState extends State<BuyListScreen> {
   List<BuyList> buyList = [];
   BuyList? buyListModel;
   String dropdownValue = 'One';
+  List<String> list = <String>["One", "Two", "Three", "Four"];
   final myController = TextEditingController();
   FocusNode? focusNode;
   @override
@@ -55,18 +56,18 @@ class _BuyListScreenState extends State<BuyListScreen> {
             itemCount: buyList.length,
             itemBuilder: (BuildContext context, int index) {
               var item = buyList[index];
-              return Dismissible(key: 
-              Key("f"), 
-              onDismissed: (direction) {
-                setState(() {
-                  buyList.removeAt(index);
-                });
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Deleted"),));
-              },
-              background: Container(color: Colors.red, child: Text("Deleting"),),
-              child:
-               BuyListCell(item)); 
-              
+              return Dismissible(
+                  key: Key("f"),
+                  onDismissed: (direction) {
+                    setState(() {
+                      buyList.removeAt(index);
+                    });
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text("Deleted"),
+                    ));
+                  },
+                  background: Container(color: Colors.red),
+                  child: BuyListCell(item));
             }),
       ),
     );
@@ -114,19 +115,15 @@ class _BuyListScreenState extends State<BuyListScreen> {
                                     onChanged: (String? newValue) {
                                       setState(() {
                                         dropdownValue = newValue!;
+                                          category = BuyCategory.values[list.indexOf(newValue)];
+                                          print("Category $category");
                                       });
                                     },
-                                    items: <String>[
-                                      'One',
-                                      'Two',
-                                      'Free',
-                                      'Four'
-                                    ].map<DropdownMenuItem<String>>(
+                                    items: list.map<DropdownMenuItem<String>>(
                                         (String value) {
                                       return DropdownMenuItem<String>(
                                         value: value,
-                                        child: 
-                                        Text(value),
+                                        child: Text(value),
                                       );
                                     }).toList()));
                           });
@@ -141,10 +138,11 @@ class _BuyListScreenState extends State<BuyListScreen> {
                     onPressed: () {
                       buyListModel =
                           BuyList(category: category, item: myController.text);
-                          setState(() {
-                               buyList.add(buyListModel!);
-                          });
-                   
+                          print("Category $category");
+                      setState(() {
+                        buyList.add(buyListModel!);
+                      });
+
                       // print(myController.text);
                       // print(buyList.map((e) => e.category));
 

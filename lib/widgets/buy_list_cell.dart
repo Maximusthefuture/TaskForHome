@@ -1,14 +1,16 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:tasks_for_home/data/buy_todo_list.dart';
 import 'package:tasks_for_home/data/category.dart';
 
 class BuyListCell extends StatefulWidget {
+  BuyList? buyList;
+  BuyListCell(this.buyList);
   @override
-  _BuyListCellState createState() => _BuyListCellState();
+  _BuyListCellState createState() => _BuyListCellState(buyList);
 }
 
 class _BuyListCellState extends State<BuyListCell> {
+  
   bool? isChecked = false;
   BuyCategory? category;
   List<BuyList> buyList = [];
@@ -16,9 +18,10 @@ class _BuyListCellState extends State<BuyListCell> {
   BuyList? buyListModel;
   String dropdownValue = 'One';
   final myController = TextEditingController();
+
+  _BuyListCellState(this.buyListModel);
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     focusNode = FocusNode();
   }
@@ -49,7 +52,7 @@ class _BuyListCellState extends State<BuyListCell> {
                 });
               },
             ),
-            Text("Some text"),
+            Text(buyListModel!.item!),
             GestureDetector(
               child: Container(
                   height: 50,
@@ -78,6 +81,8 @@ class _BuyListCellState extends State<BuyListCell> {
     );
   }
 
+
+  
   Widget modalBottomShit() {
     return Container(
       height: MediaQuery.of(context).size.height / 6,

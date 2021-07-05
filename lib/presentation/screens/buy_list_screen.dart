@@ -1,8 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tasks_for_home/data/buy_todo_list.dart';
 import 'package:tasks_for_home/data/category.dart';
+import 'package:tasks_for_home/data/login_state.dart';
+import 'package:tasks_for_home/data/todo_list_repository_impl.dart';
 import 'package:tasks_for_home/widgets/buy_list_cell.dart';
 
 class BuyListScreen extends StatefulWidget {
@@ -13,11 +18,26 @@ class BuyListScreen extends StatefulWidget {
 }
 
 class _BuyListScreenState extends State<BuyListScreen> {
-  BuyCategory? category;
+  TodoListRepositoryImpl repository = new TodoListRepositoryImpl();
+
   List<BuyList> buyList = [];
+  StreamSubscription<QuerySnapshot>? _streamSubscription;
+
+  void _updateWatchList(QuerySnapshot snapshot) {
+    setState(() {
+      buyList = repository.getItemFromQuery(snapshot);
+    });
+  }
+
+  _BuyListScreenState() {
+    _streamSubscription = repository.getAllTodoItems().listen(_updateWatchList);
+  }
+
+  String? category = "Дом";
+  // List<BuyList> buyList = [];
   BuyList? buyListModel;
-  String dropdownValue = 'One';
-  List<String> list = <String>["One", "Two", "Three", "Four"];
+  String dropdownValue = 'Дом';
+  List<String> list = <String>["Home", "Study", "Work", "SomeList"];
   final myController = TextEditingController();
   FocusNode? focusNode;
   @override
@@ -35,6 +55,7 @@ class _BuyListScreenState extends State<BuyListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var provider = Provider.of<LoginState>(context, listen: true);
     return Scaffold(
       appBar: AppBar(
         title: Text("Buy List"),
@@ -42,7 +63,7 @@ class _BuyListScreenState extends State<BuyListScreen> {
           IconButton(
             icon: Icon(CupertinoIcons.add),
             onPressed: () {
-              showAddItemMenu(context, myController);
+              showAddItemMenu(context, myController, provider);
             },
           ),
           IconButton(
@@ -73,9 +94,9 @@ class _BuyListScreenState extends State<BuyListScreen> {
     );
   }
 
-  Widget modalBottomShit(
-      BuildContext context, TextEditingController myController) {
-    var dropdownValue = "One";
+  Widget modalBottomShit(BuildContext context,
+      TextEditingController myController, LoginState appState) {
+    // var dropdownValue = "Дом";
     return Container(
       height: MediaQuery.of(context).size.height / 6,
       // color: Colors.amber,
@@ -96,37 +117,7 @@ class _BuyListScreenState extends State<BuyListScreen> {
               children: [
                 IconButton(
                     onPressed: () {
-                      // category = BuyCategory.clean;
-                      showDialog(
-                          context: context,
-                          builder: (builder) {
-                            return AlertDialog(
-                                content: DropdownButton<String>(
-                                    value: dropdownValue,
-                                    icon: const Icon(Icons.arrow_downward),
-                                    iconSize: 24,
-                                    elevation: 16,
-                                    style: const TextStyle(
-                                        color: Colors.deepPurple),
-                                    underline: Container(
-                                      height: 2,
-                                      color: Colors.deepPurpleAccent,
-                                    ),
-                                    onChanged: (String? newValue) {
-                                      setState(() {
-                                        dropdownValue = newValue!;
-                                          category = BuyCategory.values[list.indexOf(newValue)];
-                                          print("Category $category");
-                                      });
-                                    },
-                                    items: list.map<DropdownMenuItem<String>>(
-                                        (String value) {
-                                      return DropdownMenuItem<String>(
-                                        value: value,
-                                        child: Text(value),
-                                      );
-                                    }).toList()));
-                          });
+                      showAlert(list);
                     },
                     icon: Icon(Icons.flag)),
                 IconButton(onPressed: () {}, icon: Icon(Icons.mail)),
@@ -136,16 +127,11 @@ class _BuyListScreenState extends State<BuyListScreen> {
                   child: IconButton(
                     icon: Icon(Icons.send),
                     onPressed: () {
-                      buyListModel =
-                          BuyList(category: category, item: myController.text);
-                          print("Category $category");
-                      setState(() {
-                        buyList.add(buyListModel!);
-                      });
-
-                      // print(myController.text);
-                      // print(buyList.map((e) => e.category));
-
+                      buyListModel = BuyList(
+                          category: category,
+                          item: myController.text,
+                          isChecked: false);
+                      appState.addTodoList(buyListModel!);
                       Navigator.pop(context);
                       myController.clear();
                     },
@@ -159,8 +145,41 @@ class _BuyListScreenState extends State<BuyListScreen> {
     );
   }
 
-  void showAddItemMenu(
-      BuildContext context, TextEditingController myController) {
+  void showAlert(List<String> list) {
+    showDialog(
+        context: context,
+        builder: (builder) {
+          return StatefulBuilder(builder: (context, myState) {
+            return AlertDialog(
+                content: DropdownButton<String>(
+                    value: list[0],
+                    icon: const Icon(Icons.arrow_downward),
+                    iconSize: 24,
+                    elevation: 16,
+                    style: const TextStyle(color: Colors.deepPurple),
+                    underline: Container(
+                      height: 2,
+                      color: Colors.deepPurpleAccent,
+                    ),
+                    onChanged: (String? newValue) {
+                      myState(() {
+                        dropdownValue = newValue!;
+                        category = newValue;
+                        print("Category $category");
+                      });
+                    },
+                    items: list.map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList()));
+          });
+        });
+  }
+
+  void showAddItemMenu(BuildContext context, TextEditingController myController,
+      LoginState appState) {
     showModalBottomSheet(
         isScrollControlled: true,
         shape: RoundedRectangleBorder(
@@ -170,7 +189,7 @@ class _BuyListScreenState extends State<BuyListScreen> {
         builder: (BuildContext context) {
           return Padding(
             padding: MediaQuery.of(context).viewInsets,
-            child: modalBottomShit(context, myController),
+            child: modalBottomShit(context, myController, appState),
           );
         });
   }

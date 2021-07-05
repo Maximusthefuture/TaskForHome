@@ -55,7 +55,7 @@ class _BuyListCellState extends State<BuyListCell> {
                   ],
                 ),
                 Spacer(),
-                Center(child: Text("Home"))
+                Center(child: Text(buyListModel!.category!))
               ],
             ),
           ),

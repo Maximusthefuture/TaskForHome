@@ -6,7 +6,7 @@ import 'package:tasks_for_home/data/authentication.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:tasks_for_home/data/watch_list_model.dart';
+import 'package:tasks_for_home/data/buy_todo_list.dart';
 import 'package:tasks_for_home/domain/watch_list.dart';
 
 class LoginState extends ChangeNotifier {
@@ -28,6 +28,15 @@ class LoginState extends ChangeNotifier {
     return restaurants.add({
       'name': watchList.name,
       'posterPath': watchList.movieIcon,
+    });
+  }
+
+  Future<void> addTodoList(BuyList todoList) {
+    final todo = FirebaseFirestore.instance.collection('todo_list');
+    return todo.add({
+      'item': todoList.item,
+      'category': todoList.category,
+      'isDone': todoList.isChecked
     });
   }
 

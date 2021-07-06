@@ -5,7 +5,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tasks_for_home/data/buy_todo_list.dart';
-import 'package:tasks_for_home/data/category.dart';
 import 'package:tasks_for_home/data/login_state.dart';
 import 'package:tasks_for_home/data/todo_list_repository_impl.dart';
 import 'package:tasks_for_home/widgets/buy_list_cell.dart';
@@ -19,6 +18,7 @@ class BuyListScreen extends StatefulWidget {
 
 class _BuyListScreenState extends State<BuyListScreen> {
   TodoListRepositoryImpl repository = new TodoListRepositoryImpl();
+  //TODO: need personal list?
 
   List<BuyList> buyList = [];
   StreamSubscription<QuerySnapshot>? _streamSubscription;
@@ -128,7 +128,13 @@ class _BuyListScreenState extends State<BuyListScreen> {
                 padding: EdgeInsets.all(16),
                 width: MediaQuery.of(context).size.width,
                 child: TextField(
+                  autofocus: true,
+                  decoration: InputDecoration(
+                    hintText: "Fare cose"
+                    
+                  ),
                   controller: myController,
+                  
                 )),
             Row(
               mainAxisSize: MainAxisSize.max,
@@ -145,11 +151,18 @@ class _BuyListScreenState extends State<BuyListScreen> {
                   child: IconButton(
                     icon: Icon(Icons.send),
                     onPressed: () {
+                      bool showToAll = true;
                       buyListModel = BuyList(
                           category: category,
                           item: myController.text,
                           isChecked: false);
-                      appState.addTodoList(buyListModel!);
+                          //TODO: SQLITE?
+                          if (showToAll)  {
+                            appState.addTodoList(buyListModel!);
+                          } else {
+                            // sqlite.addTodoList();
+                          }
+                     
                       Navigator.pop(context);
                       myController.clear();
                     },

@@ -39,6 +39,7 @@ class _BuyListScreenState extends State<BuyListScreen> {
     // }
   }
 
+  bool showToAll = true;
   String category = "Home";
   BuyList? buyListModel;
   bool showCheckedItems = false;
@@ -151,7 +152,7 @@ class _BuyListScreenState extends State<BuyListScreen> {
                   child: IconButton(
                     icon: Icon(Icons.send),
                     onPressed: () {
-                      bool showToAll = true;
+                     
                       buyListModel = BuyList(
                           category: category,
                           item: myController.text,

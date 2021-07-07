@@ -3,11 +3,33 @@ import 'package:flutter/material.dart';
 class ReminderCell extends StatelessWidget {
   const ReminderCell({Key? key}) : super(key: key);
 
-  @override
+    @override
   Widget build(BuildContext context) {
     return Container(
-        child: Row(
-      children: [Text("Cell"), Spacer(), Text("11.03.22")],
-    ));
+        height: 100,
+        child: Card(
+          elevation: 5.0,
+          child: Padding(
+            padding: EdgeInsets.all(16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Заплатить за квартиру",
+                      textScaleFactor: 1,
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+                Spacer(),
+                Center(child: Text("22.03"))
+              ],
+            ),
+          ),
+        ));
   }
 }

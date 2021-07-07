@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:tasks_for_home/domain/notification_service.dart';
 import 'package:tasks_for_home/presentation/screens/buy_list_screen.dart';
 import 'package:tasks_for_home/presentation/screens/movies_series.dart';
 import 'package:tasks_for_home/presentation/screens/reminder_screen.dart';
@@ -9,12 +10,14 @@ import 'package:firebase_core/firebase_core.dart';
 import 'data/login_state.dart';
 
 void main() async {
-   WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
+  await NotificationService.init();
   await Firebase.initializeApp();
-runApp(ChangeNotifierProvider<LoginState>(
-      create: (context) => LoginState(),
-      builder: (context, _) => Home()));
-      }
+  runApp(ChangeNotifierProvider<LoginState>(
+      create: (context) => LoginState(), builder: (context, _) => Home()));
+}
+
+
 
 
 class Home extends StatefulWidget {
@@ -48,8 +51,7 @@ class HomeState extends State<Home> {
       ),
       label: "Настройки",
     );
-    return 
-    MaterialApp(
+    return MaterialApp(
       home: Scaffold(
         // appBar: AppBar(
         //   title: Text("Home app"),

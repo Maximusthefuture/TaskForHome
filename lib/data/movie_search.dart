@@ -112,36 +112,45 @@ class _MovieSearchState extends State<MovieSearchWidget> {
   }
 }
 
-void addToWatchList(LoginState appState, Results? snapshot, BuildContext context) {
+void addToWatchList(
+    LoginState appState, Results? snapshot, BuildContext context) {
   // appState.addToWatchList([snapshot?.posterPath]);
-  final snackBar = SnackBar(content: Text("${snapshot?.name ?? snapshot?.originalTitle} added to watch list"));
+  final snackBar = SnackBar(
+      content: Text(
+          "${snapshot?.name ?? snapshot?.originalTitle} added to watch list"));
   ScaffoldMessenger.of(context).showSnackBar(snackBar);
   var name = FirebaseAuth.instance.currentUser?.displayName;
-  appState.addWatchList(WatchListModel(name: name, movieIcon:snapshot?.posterPath));
+  appState.addWatchList(WatchListModel(
+      name: name,
+      movieIcon: snapshot?.posterPath,
+      movieName: snapshot?.originalTitle,
+      movieId: snapshot?.id));
+      
 }
 
 class MovieSearchResultWidget extends StatelessWidget {
   final Results? snapshot;
-  
 
   const MovieSearchResultWidget({key, this.snapshot}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     var provider = Provider.of<LoginState>(context, listen: true);
 
-    return Container(
-        child: GestureDetector(
-            onTap: () => addToWatchList(provider, snapshot, context),
-            child: Container(
-                child: Row(children: [
-              Container(
-                  height: 100,
-                  width: 100,
-                  child: Image.network(
-                    "https://image.tmdb.org/t/p/w780${snapshot?.posterPath ?? snapshot?.backdropPath}",
-                    fit: BoxFit.cover,
-                  )),
-              Text("${snapshot?.title ?? snapshot?.name}"),
-            ]))));
+    return Container(child: GestureDetector(onTap: () {
+      
+      addToWatchList(provider, snapshot, context);
+      child:
+      Container(
+          child: Row(children: [
+        Container(
+            height: 100,
+            width: 100,
+            child: Image.network(
+              "https://image.tmdb.org/t/p/w780${snapshot?.posterPath ?? snapshot?.backdropPath}",
+              fit: BoxFit.cover,
+            )),
+        Text("${snapshot?.title ?? snapshot?.name}"),
+      ]));
+    }));
   }
 }

@@ -5,5 +5,9 @@ abstract class TodoListRepository {
   List<BuyList> getItemFromQuery(QuerySnapshot snapshot);
   Stream<QuerySnapshot> getAllTodoItems();
   Stream<QuerySnapshot> getDoneItems();
+  Future<void> addTodo(BuyList buyList, bool local);
+  //TODO: ADD LOCALLY
+  // addItemToDB(BuyList buyList);
+  //getItemFromDB(BuyList buyList);
 
 }

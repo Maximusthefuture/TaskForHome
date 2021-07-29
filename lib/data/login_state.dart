@@ -23,11 +23,36 @@ class LoginState extends ChangeNotifier {
     init();
   }
 
+  // Future<void> addWatchListLocaly(WatchListModel watchList, bool local) {
+  //   if (!local) {
+  //   final restaurants = FirebaseFirestore.instance.collection('watch_list');
+  //   return restaurants.add({
+  //     'name': watchList.name,
+  //     'posterPath': watchList.movieIcon,
+  //   });
+  //   } else {
+  //     return add.toDb;
+  //   }
+  // }
+
+  //TODO move to repository????
   Future<void> addWatchList(WatchListModel watchList) {
     final restaurants = FirebaseFirestore.instance.collection('watch_list');
     return restaurants.add({
       'name': watchList.name,
       'posterPath': watchList.movieIcon,
+      'movieName': watchList.movieName,
+      'movieId': watchList.movieId
+    });
+  }
+
+  Future<void> updateWatchList(WatchListModel watchList, String id) async {
+    final restaurants = FirebaseFirestore.instance.collection('watch_list');
+    return await restaurants.doc(id).update({
+      'name': watchList.name,
+      'posterPath': watchList.movieIcon,
+      'movieName': watchList.movieName,
+      'movieId': watchList.movieId
     });
   }
 
@@ -52,6 +77,7 @@ class LoginState extends ChangeNotifier {
   Future<void> init() async {
     FirebaseAuth.instance.userChanges().listen((user) {
       if (user != null) {
+        //TODO READ WHAT IS IT DO?
         _watchListSubscription = FirebaseFirestore.instance
             .collection('watch_list')
             .snapshots()

@@ -5,40 +5,43 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tasks_for_home/data/buy_todo_list.dart';
+import 'package:tasks_for_home/data/local_data_source.dart';
 import 'package:tasks_for_home/data/login_state.dart';
+import 'package:tasks_for_home/data/remote_data_source.dart';
+import 'package:tasks_for_home/data/todo_data_source.dart';
 import 'package:tasks_for_home/data/todo_list_repository_impl.dart';
 import 'package:tasks_for_home/widgets/buy_list_cell.dart';
 
 class BuyListScreen extends StatefulWidget {
-  const BuyListScreen({Key? key}) : super(key: key);
+  BuyListScreen({Key? key}) : super(key: key);
 
   @override
   _BuyListScreenState createState() => _BuyListScreenState();
 }
 
 class _BuyListScreenState extends State<BuyListScreen> {
-  TodoListRepositoryImpl repository = new TodoListRepositoryImpl();
   //TODO: need personal list?
-
   List<BuyList> buyList = [];
   StreamSubscription<QuerySnapshot>? _streamSubscription;
-
+  TodoListRepositoryImpl? repository;
   void _updateWatchList(QuerySnapshot snapshot) {
-   
-      setState(() {
-        buyList = repository.getItemFromQuery(snapshot);
-      });
-
+    setState(() {
+      buyList = repository!.getItemFromQuery(snapshot);
+    });
   }
 
   _BuyListScreenState() {
     // if (!showCheckedItems) {
-    _streamSubscription = repository.getAllTodoItems().listen(_updateWatchList);
+    RemoteDataSouce remoteDataSource = RemoteDataSouce();
+    LocalDataSource localDataSource = LocalDataSource();
+     repository = TodoListRepositoryImpl(
+        remoteDataSource: remoteDataSource, localDataSource: localDataSource);
+    _streamSubscription = repository!.getAllTodoItems().listen(_updateWatchList);
     // } else {
-      // _streamSubscription = repository.getDoneItems().listen(_updateWatchList);
+    // _streamSubscription = repository.getDoneItems().listen(_updateWatchList);
     // }
   }
-
+  var local = true;
   bool showToAll = true;
   String category = "Home";
   BuyList? buyListModel;
@@ -130,12 +133,8 @@ class _BuyListScreenState extends State<BuyListScreen> {
                 width: MediaQuery.of(context).size.width,
                 child: TextField(
                   autofocus: true,
-                  decoration: InputDecoration(
-                    hintText: "Fare cose"
-                    
-                  ),
+                  decoration: InputDecoration(hintText: "Fare cose"),
                   controller: myController,
-                  
                 )),
             Row(
               mainAxisSize: MainAxisSize.max,
@@ -145,30 +144,56 @@ class _BuyListScreenState extends State<BuyListScreen> {
                       showAlert(list);
                     },
                     icon: Icon(Icons.flag)),
-                IconButton(onPressed: () {}, icon: Icon(Icons.mail)),
+                IconButton(
+                    onPressed: () {
+                      local = false;
+                    },
+                    icon: Icon(Icons.mail)),
                 Spacer(),
                 Align(
-                  alignment: Alignment.centerLeft,
-                  child: IconButton(
-                    icon: Icon(Icons.send),
-                    onPressed: () {
-                     
-                      buyListModel = BuyList(
-                          category: category,
-                          item: myController.text,
-                          isChecked: false);
-                          //TODO: SQLITE?
-                          if (showToAll)  {
-                            appState.addTodoList(buyListModel!);
-                          } else {
-                            // sqlite.addTodoList();
-                          }
-                     
-                      Navigator.pop(context);
-                      myController.clear();
-                    },
-                  ),
-                )
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                        padding: EdgeInsets.only(right: 16),
+                        child: GestureDetector(
+                          child: Icon(Icons.send),
+                          onTap: () {
+                            buyListModel = BuyList(
+                                category: category,
+                                item: myController.text,
+                                isChecked: false);
+                            //TODO: SQLITE?
+                            
+                            // if (showToAll) {
+                            //   appState.addTodoList(buyListModel!);
+                            // } else {
+                            //   // sqlite.addTodoList();
+                            // }
+                            
+                            repository!.addTodo(buyListModel!, local);
+                            print(local);
+
+                            Navigator.pop(context);
+                            myController.clear();
+                          },
+                          onLongPress: () {
+                            //TODO ADD TIME PICKER
+                            // showDialog(
+                            //     context: context,
+                            //     builder: (builder) {
+                            //       return AlertDialog(
+                            //         title: Text("TITLE"),
+                            //       );
+                            //     });
+                            local = false;
+                            repository!.addTodo(buyListModel!, local);
+                            print("LONG PRESS");
+                            //showSnackBar
+                            final snackBar = SnackBar(content: Text('Added to list'));
+                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                            Navigator.pop(context);
+                            
+                          },
+                        ))),
               ],
             ),
           ],

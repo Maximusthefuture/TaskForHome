@@ -3,7 +3,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class NotificationService {
   static final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-        FlutterLocalNotificationsPlugin();
+      FlutterLocalNotificationsPlugin();
   static final NotificationService _notificationService =
       NotificationService._internal();
 
@@ -13,19 +13,18 @@ class NotificationService {
 
   NotificationService._internal();
 
-    static Future<void> init() async {
-    
+  static Future<void> init() async {
     final AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings('launch_background');
 
-         await flutterLocalNotificationsPlugin
-    .resolvePlatformSpecificImplementation<
-        IOSFlutterLocalNotificationsPlugin>()
-    ?.requestPermissions(
-    alert: true,
-    badge: true,
-    sound: true,
-    );
+    await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            IOSFlutterLocalNotificationsPlugin>()
+        ?.requestPermissions(
+          alert: true,
+          badge: true,
+          sound: true,
+        );
 
     final IOSInitializationSettings initializationSettingsIOS =
         IOSInitializationSettings(
@@ -44,7 +43,7 @@ class NotificationService {
         onSelectNotification: selectNotification);
   }
 
-   static Future selectNotification(String? payload) async {
+  static Future selectNotification(String? payload) async {
     //Handle notification tapped logic here
     // if (payload != null) {
     //   debugPrint('notification payload: $payload');
@@ -54,4 +53,6 @@ class NotificationService {
     //   MaterialPageRoute<void>(builder: (context) => ReminderScreen(payload)),
     // );
   }
+
+  
 }

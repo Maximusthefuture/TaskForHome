@@ -14,7 +14,11 @@ class ReminderScreen extends StatefulWidget {
   _ReminderScreenState createState() => _ReminderScreenState();
 }
 
-//TODO: Local notification>?????
+var title = "";
+var body = "";
+var scheduledTime =
+    tz.TZDateTime.now(tz.local).add(const Duration(seconds: 10));
+
 class _ReminderScreenState extends State<ReminderScreen> {
   final myController = TextEditingController();
 
@@ -70,21 +74,34 @@ Widget modalBottomShit(BuildContext context, TextEditingController myController,
               IconButton(onPressed: () {}, icon: Icon(Icons.flag)),
               IconButton(
                   onPressed: () {
-                    // _selectDate(context, selectedDate);
-                    showNotification();
+                    _selectDate(context, selectedDate);
+                    // showNotification(title, body, scheduledTime);
+                    
                   },
                   icon: Icon(Icons.timer)),
               Spacer(),
               Align(
-                alignment: Alignment.centerLeft,
-                child: IconButton(
-                  icon: Icon(Icons.send),
-                  onPressed: () {
-                    Navigator.pop(context);
-                    myController.clear();
-                  },
-                ),
-              )
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                      padding: EdgeInsets.only(right: 16),
+                      child: GestureDetector(
+                        child: Icon(Icons.send),
+                        onTap: () {
+                          print("Tap PRESS");
+                          Navigator.pop(context);
+                          myController.clear();
+                        },
+                        onLongPress: () {
+                          showDialog(
+                              context: context,
+                              builder: (builder) {
+                                return AlertDialog(
+                                  title: Text("15 мин"),
+                                );
+                              });
+                          print("LONG PRESS");
+                        },
+                      )))
             ],
           ),
         ],
@@ -115,19 +132,19 @@ Future<Null> _selectDate(BuildContext context, DateTime selectedDate) async {
       context: context,
       initialDate: selectedDate,
       initialDatePickerMode: DatePickerMode.day,
-      firstDate: DateTime(2015),
+      firstDate: DateTime(2021),
       lastDate: DateTime(2101));
   if (picked != null) {
     // setState(() {
     selectedDate = picked;
     _dateController.text = DateFormat.yMd().format(selectedDate);
   }
+  print("DATE IS ${_dateController.text}");
 }
 
-void showNotification() async {
+void showNotification(String title, String body, var time) async {
   const AndroidNotificationDetails androidPlatformChannelSpecifics =
-      AndroidNotificationDetails(
-          'ID', 'NAME', 'My channel',
+      AndroidNotificationDetails('ReminderID', 'ReminderChannel' , 'Reminder',
           importance: Importance.max, priority: Priority.high, showWhen: false);
 
   const IOSNotificationDetails iOSPlatformChannelSpecifics =
@@ -139,7 +156,6 @@ void showNotification() async {
     presentSound:
         true, // Play a sound when the notification is displayed and the application is in the foreground (only from iOS 10 onwards)  // Specifics the file path to play (only from iOS 10 onwards)
     badgeNumber: 0, // The application's icon badge number
-     
   );
   var platformSpecifics = NotificationDetails(
       android: androidPlatformChannelSpecifics,
@@ -147,12 +163,8 @@ void showNotification() async {
   tz.initializeTimeZones();
 
   await NotificationService.flutterLocalNotificationsPlugin.zonedSchedule(
-      0,
-      "SOME TITLE",
-      "SOME BODY",
-      tz.TZDateTime.now(tz.local).add(const Duration(seconds: 10)),
-      platformSpecifics,
+      0, title, body, time, platformSpecifics,
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime,
-      androidAllowWhileIdle: true);
+      androidAllowWhileIdle: true);  
 }

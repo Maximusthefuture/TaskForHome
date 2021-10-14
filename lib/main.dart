@@ -13,6 +13,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await NotificationService.init();
   await Firebase.initializeApp();
+  final b;
   runApp(ChangeNotifierProvider<LoginState>(
       create: (context) => LoginState(), builder: (context, _) => Home()));
 }

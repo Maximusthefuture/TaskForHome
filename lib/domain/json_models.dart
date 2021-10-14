@@ -65,7 +65,7 @@ class PopularMovies {
   int? page;
   int? totalResults;
   int? totalPages;
-  List<Results> ?results;
+  List<Results>? results;
   int? id;
   String? title;
 
@@ -101,7 +101,7 @@ class PopularMovies {
 
 class Results {
   // double popularity;
-  int? voteCount;
+  // int? voteCount;
   bool? video;
   String? posterPath;
   int? id;
@@ -109,9 +109,9 @@ class Results {
   String? backdropPath;
   String? originalLanguage;
   String? originalTitle;
-  List<int>? genreIds;
+  // List<int>? genreIds;
   String? title;
-  double? voteAverage;
+  // double? voteAverage;
   String? overview;
   String? releaseDate;
   String? profilePath;
@@ -121,7 +121,7 @@ class Results {
   Results(
       {
         // this.popularity,
-      this.voteCount,
+      // this.voteCount,
       this.video,
       this.posterPath,
       this.id,
@@ -129,9 +129,9 @@ class Results {
       this.backdropPath,
       this.originalLanguage,
       this.originalTitle,
-      this.genreIds,
+      // this.genreIds,
       this.title,
-      this.voteAverage,
+      // this.voteAverage,
       this.overview,
       this.releaseDate,
       this.profilePath,
@@ -139,7 +139,7 @@ class Results {
 
   Results.fromJson(Map<String, dynamic> json) {
     // popularity = json['popularity'];
-    voteCount = json['vote_count'];
+    // voteCount = json['vote_count'];
     video = json['video'];
     posterPath = json['poster_path'];
     id = json['id'];
@@ -147,9 +147,9 @@ class Results {
     backdropPath = json['backdrop_path'];
     originalLanguage = json['original_language'];
     originalTitle = json['original_title'];
-    genreIds = json['genre_ids'].cast<int>();
+    // genreIds = json['genre_ids'];
     title = json['title'];
-    voteAverage = json['vote_average'].toDouble();
+    // voteAverage = json['vote_average'];
     overview = json['overview'];
     releaseDate = json['release_date'];
     profilePath = json['profile_path'];
@@ -159,7 +159,7 @@ class Results {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     // data['popularity'] = this.popularity;
-    data['vote_count'] = this.voteCount;
+    // data['vote_count'] = this.voteCount;
     data['video'] = this.video;
     data['poster_path'] = this.posterPath;
     data['id'] = this.id;
@@ -167,9 +167,9 @@ class Results {
     data['backdrop_path'] = this.backdropPath;
     data['original_language'] = this.originalLanguage;
     data['original_title'] = this.originalTitle;
-    data['genre_ids'] = this.genreIds;
+    // data['genre_ids'] = this.genreIds;
     data['title'] = this.title;
-    data['vote_average'] = this.voteAverage;
+    // data['vote_average'] = this.voteAverage;
     data['overview'] = this.overview;
     data['release_date'] = this.releaseDate;
     return data;
@@ -188,15 +188,15 @@ class MovieDetails {
   final String? title;
   final String? status;
   final String? posterPath;
-  final num? voteAverage;
+  // final num? voteAverage;
   final String? releaseDate;
-  final num? duration;
+  // final num? duration;
 
   MovieDetails({
-    this.duration,
+    // this.duration,
     this.releaseDate,
     this.title,
-    this.voteAverage,
+    // this.voteAverage,
     this.posterPath,
     this.status,
     this.overview,
@@ -217,10 +217,10 @@ class MovieDetails {
       status: json['status'],
       posterPath: json['poster_path'],
       backdropPath: json['backdrop_path'],
-      voteAverage: json['vote_average'],
+      // voteAverage: json['vote_average'],
       title: json['title'],
       releaseDate: json['release_date'],
-      duration: json['runtime'],
+      // duration: json['runtime'],
     );
   }
 }

@@ -36,13 +36,13 @@ class LoginState extends ChangeNotifier {
   // }
 
   //TODO move to repository????
-  Future<void> addWatchList(WatchListModel watchList) {
+  Future<void> addWatchList(WatchListModel? watchList) {
     final restaurants = FirebaseFirestore.instance.collection('watch_list');
     return restaurants.add({
-      'name': watchList.name,
-      'posterPath': watchList.movieIcon,
-      'movieName': watchList.movieName,
-      'movieId': watchList.movieId
+      'name': watchList?.name,
+      'posterPath': watchList?.movieIcon,
+      'movieName': watchList?.movieName,
+      'movieId': watchList?.movieId
     });
   }
 

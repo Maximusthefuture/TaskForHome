@@ -95,12 +95,23 @@ class _MovieSearchState extends State<MovieSearchWidget> {
                   future: snapshot.data,
                   builder: (context, snapshot) {
                     // print("SNAPSHOT DATA${snapshot.data!.originalTitle}");
-                    return ListView.builder(
+                    return GridView.builder(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount:
+                                MediaQuery.of(context).orientation ==
+                                        Orientation.landscape
+                                    ? 3
+                                    : 2,
+                            crossAxisSpacing: 8,
+                            mainAxisSpacing: 8),
                         itemCount: snapshot.data?.length,
                         itemBuilder: (context, index) {
                           print("SNAPSHOT ${snapshot.data?.length}");
-                          return MovieSearchResultWidget(
-                              snapshot: snapshot.data?.elementAt(index));
+                          return GestureDetector(onTap:() {
+                            Navigator.of(context).pushNamed("routeName");
+                          },
+                          child:MovieSearchResultWidget(
+                              snapshot: snapshot.data?.elementAt(index)));
                         });
                   },
                 );
@@ -125,7 +136,6 @@ void addToWatchList(
       movieIcon: snapshot?.posterPath,
       movieName: snapshot?.originalTitle,
       movieId: snapshot?.id));
-      
 }
 
 class MovieSearchResultWidget extends StatelessWidget {
@@ -136,21 +146,22 @@ class MovieSearchResultWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     var provider = Provider.of<LoginState>(context, listen: true);
 
-    return Container(child: GestureDetector(onTap: () {
-      
-      addToWatchList(provider, snapshot, context);
-      child:
-      Container(
-          child: Row(children: [
-        Container(
-            height: 100,
-            width: 100,
-            child: Image.network(
-              "https://image.tmdb.org/t/p/w780${snapshot?.posterPath ?? snapshot?.backdropPath}",
-              fit: BoxFit.cover,
-            )),
-        Text("${snapshot?.title ?? snapshot?.name}"),
-      ]));
-    }));
+    //TODO: 1.Some error cuz of gesturedetector
+    //TODO: 2. Make grid?
+    // return Container(child: GestureDetector(onTap: () {
+
+    //   addToWatchList(provider, snapshot, context);
+    // child:
+
+    // return Container(
+    //     child: Row(children: [
+    return Container(
+        height: 100,
+        width: 100,
+        child: Image.network(
+      "https://image.tmdb.org/t/p/w780${snapshot?.posterPath ?? snapshot?.backdropPath}",
+      fit: BoxFit.fill,
+    ));
+    // Text("${snapshot?.title ?? snapshot?.name}"),
   }
 }

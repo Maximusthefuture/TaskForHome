@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tasks_for_home/data/movie_search_bloc.dart';
 import 'package:tasks_for_home/data/movie_search_bloc_provider.dart';
+import 'package:tasks_for_home/db/movies_db.dart';
 import 'package:tasks_for_home/domain/json_models.dart';
 import 'package:tasks_for_home/domain/watch_list.dart';
 
@@ -76,6 +77,12 @@ class _MovieSearchState extends State<MovieSearchWidget> {
   MovieSearchBloc? bloc;
 
   _MovieSearchState(this.query);
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getAllMovies();
+  }
 
   @override
   void didChangeDependencies() {
@@ -107,11 +114,12 @@ class _MovieSearchState extends State<MovieSearchWidget> {
                         itemCount: snapshot.data?.length,
                         itemBuilder: (context, index) {
                           print("SNAPSHOT ${snapshot.data?.length}");
-                          return GestureDetector(onTap:() {
-                            Navigator.of(context).pushNamed("routeName");
-                          },
-                          child:MovieSearchResultWidget(
-                              snapshot: snapshot.data?.elementAt(index)));
+                          return GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).pushNamed("routeName");
+                              },
+                              child: MovieSearchResultWidget(
+                                  snapshot: snapshot.data?.elementAt(index)));
                         });
                   },
                 );
@@ -138,6 +146,29 @@ void addToWatchList(
       movieId: snapshot?.id));
 }
 
+Future insertNewMovie(Results? snapshot) async {
+  await MoviesDatabase.instance.insertMovie(
+      WatchListModel(movieName: snapshot?.name, movieId: snapshot?.id));
+}
+
+List<WatchListModel> myList = [];
+Future<List<WatchListModel>> getAllMovies() async {
+  var list = await MoviesDatabase.instance.getAllMovies();
+  myList = list;
+  return list;
+}
+
+Future<bool> isMovieorShowInList(int? id) async {
+  bool? isHave;
+  var list = getAllMovies();
+  myList.forEach((element) {
+    if (element.movieId == id) {
+      isHave = true;
+    }
+  });
+  return isHave ?? false;
+}
+
 class MovieSearchResultWidget extends StatelessWidget {
   final Results? snapshot;
 
@@ -150,7 +181,6 @@ class MovieSearchResultWidget extends StatelessWidget {
     //TODO: 2. Make grid?
     // return Container(child: GestureDetector(onTap: () {
 
-    //   addToWatchList(provider, snapshot, context);
     // child:
 
     // return Container(
@@ -158,10 +188,26 @@ class MovieSearchResultWidget extends StatelessWidget {
     return Container(
         height: 100,
         width: 100,
-        child: Image.network(
-      "https://image.tmdb.org/t/p/w780${snapshot?.posterPath ?? snapshot?.backdropPath}",
-      fit: BoxFit.fill,
-    ));
+        child: GestureDetector(
+
+            //Check if this id in db? or check is it in firebase?
+            //add in db and in firebase?
+            onTap: () async {
+              getAllMovies();
+              if (await isMovieorShowInList(snapshot?.id)) {
+                final snackBar = SnackBar(content: Text("Already in list"));
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              } else {
+                addToWatchList(provider, snapshot, context);
+                insertNewMovie(snapshot);
+              }
+            },
+            child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image.network(
+                  "https://image.tmdb.org/t/p/w780${snapshot?.posterPath ?? snapshot?.backdropPath}",
+                  fit: BoxFit.cover,
+                ))));
     // Text("${snapshot?.title ?? snapshot?.name}"),
   }
 }

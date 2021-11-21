@@ -15,6 +15,7 @@ class WatchListGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
+      
   itemCount:list?.length,
   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
       crossAxisCount: MediaQuery.of(context).orientation ==

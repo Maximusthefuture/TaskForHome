@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:tasks_for_home/data/movie_detail_bloc_provider.dart';
 import 'package:tasks_for_home/domain/json_models.dart';
 import 'package:tasks_for_home/presentation/screens/movie_detail_screen.dart';
@@ -12,8 +14,10 @@ class PopularMoviesWidget extends StatelessWidget {
 
   const PopularMoviesWidget({key, this.list}) : super(key: key);
 
+
   @override
   Widget build(BuildContext context) {
+    
     return Container(
       height: 200,
       width: double.infinity,
@@ -24,6 +28,7 @@ class PopularMoviesWidget extends StatelessWidget {
             return createWidget(context, list, index);
           }),
     );
+    
   }
 
   Widget createWidget(BuildContext context, List? list, int index) {
@@ -44,7 +49,7 @@ class PopularMoviesWidget extends StatelessWidget {
                   //   return MovieDetailBlocProvider(
                   //       child: MovieDetailsScreen(movieId: list![index].id));
                   // }));
-                  print("id: ${list![index].id}");
+                  print("id: ${list[index].id}");
                 },
                 child: Hero(
                   tag: "Movies${list?[index].id}",
@@ -53,6 +58,7 @@ class PopularMoviesWidget extends StatelessWidget {
                   // placeholderBuilder: (context, _, widget) {
                   //   return Opacity(opacity: 0.2, child: widget);
                   // },
+                
                   flightShuttleBuilder:
                       (flightContext, animation, flightDirection, fromHeroContext, toHeroContext) {
                         // final Hero toHero = toHeroContext.widget;
@@ -68,3 +74,4 @@ class PopularMoviesWidget extends StatelessWidget {
                 ))));
   }
 }
+

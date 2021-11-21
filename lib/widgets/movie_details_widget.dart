@@ -15,7 +15,7 @@ class MovieDetailsWidget extends StatelessWidget {
 //      RectTween _createRectTween(Rect begin, Rect end) {
 //     return QuadraticRectTween(begin: begin, end: end);
 // }
-    bool isInList = false;
+    // bool isInList = false;
     return NestedScrollView(
         headerSliverBuilder: (context, innerBoxIsScroller) {
           return <Widget>[
@@ -26,7 +26,9 @@ class MovieDetailsWidget extends StatelessWidget {
                 actions: <Widget>[
                   Icon(
                     Icons.star,
-                    color: isInList ? Colors.yellow : Colors.white,
+                    color: isInList(snapshot?.data?.id, 550988)
+                        ? Colors.yellow
+                        : Colors.white,
                   )
                 ],
                 flexibleSpace: FlexibleSpaceBar(
@@ -59,7 +61,8 @@ class MovieDetailsWidget extends StatelessWidget {
                     child: Image.network(
                       "https://image.tmdb.org/t/p/w780/${snapshot?.data?.backdropPath}",
                       errorBuilder: (ctx, object, stacktrace) {
-                        return Text("${object}");
+                        print("object: ${object} , stacktrace: $stacktrace");
+                        return Text("${stacktrace}");
                       },
                       loadingBuilder: (context, child, loadingProgress) {
                         if (loadingProgress == null) {
@@ -97,60 +100,77 @@ class MovieDetailsWidget extends StatelessWidget {
         },
         body: Padding(
             padding: EdgeInsets.all(1),
-            child:
-                Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-              Align(
-                alignment: Alignment.topLeft,
-                child: Container(
-                  height: 200,
-                  width: 100,
-                  // child: Hero(
-                  //     tag: "Movies",
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Align(
+                      alignment: Alignment.topLeft,
+                      child: Container(
+                        height: 200,
+                        width: 100,
 
-                  // child: CachedNetworkImage(
-                  //   placeholder: (context, url) =>
-                  //       CircularProgressIndicator(),
-                  //   imageUrl:
-                  //       "https://image.tmdb.org/t/p/w780/${snapshot?.data?.posterPath}",
-                  // )
-                  child: Image.network(
-                      "https://image.tmdb.org/t/p/w780/${snapshot?.data?.posterPath}",
-                      errorBuilder: (ctx, object, stacktrace) {
-                    return Text("${object}");
-                  }, loadingBuilder: (context, child, loadingProgress) {
-                    if (loadingProgress == null) {
-                      return child;
-                    } else {
-                      return Center(
-                        child: CircularProgressIndicator(
-                          valueColor:
-                              AlwaysStoppedAnimation<Color>(Colors.green),
+                        // child: Hero(
+                        //     tag: "Movies",
+
+                        // child: CachedNetworkImage(
+                        //   placeholder: (context, url) =>
+                        //       CircularProgressIndicator(),
+                        //   imageUrl:
+                        //       "https://image.tmdb.org/t/p/w780/${snapshot?.data?.posterPath}",
+                        // )
+
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: Image.network(
+                                      "https://image.tmdb.org/t/p/w780/${snapshot?.data?.posterPath}",
+                                      fit: BoxFit.fill,
+                                      errorBuilder: (ctx, object, stacktrace) {
+                                    return Text("${object}");
+                                  }, loadingBuilder:
+                                          (context, child, loadingProgress) {
+                                    if (loadingProgress == null) {
+                                      return child;
+                                    } else {
+                                      return Center(
+                                        child: CircularProgressIndicator(
+                                          valueColor:
+                                              AlwaysStoppedAnimation<Color>(
+                                                  Colors.green),
+                                        ),
+                                      );
+                                    }
+                                  })),
+                              Container(
+                                height: 100,
+                                width: 100,
+                                color: Colors.red,
+                              ),
+                            ]),
+                      )),
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        IconButton(
+                          icon: (Icon(Icons.add)),
+                          iconSize: 30,
+                          padding: EdgeInsets.all(9),
+                          onPressed: () {
+                            print("ICONS");
+                          },
                         ),
-                      );
-                    }
-                  }),
-                ),
-              ),
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    IconButton(
-                      icon: (Icon(Icons.add)),
-                      iconSize: 30,
-                      padding: EdgeInsets.all(9),
-                      onPressed: () {
-                        print("ICONS");
-                      },
-                    ),
-                    Icon(
-                      Icons.play_arrow,
-                      size: 40,
-                    ),
-                    Icon(Icons.share),
-                  ]),
-              Text("${snapshot?.data?.overview}")
-            ])));
+                        Icon(
+                          Icons.play_arrow,
+                          size: 40,
+                        ),
+                        Icon(Icons.share),
+                      ]),
+                  Text("${snapshot?.data?.overview}")
+                ])));
   }
 }
 
@@ -180,5 +200,14 @@ class ValleyQuadraticCurve extends Curve {
     assert(t >= 0.0 && t <= 1.0);
     double result = (4 * pow(t - 0.5, 2)).toDouble();
     return result;
+  }
+}
+
+//TODO: добавить id в базу данных просто и все? или название фильма тоже?
+bool isInList(int? idFirebase, int idFromDB) {
+  if (idFirebase == idFromDB) {
+    return true;
+  } else {
+    return false;
   }
 }

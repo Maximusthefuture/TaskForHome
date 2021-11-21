@@ -37,6 +37,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
           ),
         ],
       ),
+      //TODO: ADD DATABASE!!!
       body: Container(
           child: ListView.builder(
               itemCount: 2,

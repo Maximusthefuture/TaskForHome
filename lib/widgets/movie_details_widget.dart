@@ -1,8 +1,13 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tasks_for_home/data/login_state.dart';
 import 'package:tasks_for_home/domain/json_models.dart';
 import 'dart:math';
-import 'package:cached_network_image/cached_network_image.dart';
+
+import 'package:tasks_for_home/domain/watch_list.dart';
+// import 'package:cached_network_image/cached_network_image.dart';
 
 class MovieDetailsWidget extends StatelessWidget {
   final AsyncSnapshot<MovieDetails>? snapshot;
@@ -16,6 +21,7 @@ class MovieDetailsWidget extends StatelessWidget {
 //     return QuadraticRectTween(begin: begin, end: end);
 // }
     // bool isInList = false;
+    var provider = Provider.of<LoginState>(context, listen: true);
     return NestedScrollView(
         headerSliverBuilder: (context, innerBoxIsScroller) {
           return <Widget>[
@@ -24,12 +30,12 @@ class MovieDetailsWidget extends StatelessWidget {
                 floating: false,
                 expandedHeight: 200,
                 actions: <Widget>[
-                  Icon(
-                    Icons.star,
-                    color: isInList(snapshot?.data?.id, 550988)
-                        ? Colors.yellow
-                        : Colors.white,
-                  )
+                  // Icon(
+                  //   Icons.star,
+                  //   color: isInList(snapshot?.data?.id, 550988)
+                  //       ? Colors.yellow
+                  //       : Colors.white,
+                  // )
                 ],
                 flexibleSpace: FlexibleSpaceBar(
                   centerTitle: true,
@@ -160,6 +166,9 @@ class MovieDetailsWidget extends StatelessWidget {
                           iconSize: 30,
                           padding: EdgeInsets.all(9),
                           onPressed: () {
+
+                            //TODO change icon when added?????
+                            addToWatchList(provider, snapshot?.data, context);
                             print("ICONS");
                           },
                         ),
@@ -172,6 +181,22 @@ class MovieDetailsWidget extends StatelessWidget {
                   Text("${snapshot?.data?.overview}")
                 ])));
   }
+}
+//где делать проверку, есть в базе данных или нет?
+void addToWatchList(
+    LoginState appState, MovieDetails? snapshot, BuildContext context) {
+  // appState.addToWatchList([snapshot?.posterPath]);
+  final snackBar = SnackBar(
+      content: Text(
+          "${snapshot?.title ?? snapshot?.title} added to watch list"));
+  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  var name = FirebaseAuth.instance.currentUser?.displayName;
+  appState.addWatchList(WatchListModel(
+      name: name,
+      movieIcon: snapshot?.posterPath,
+      movieName: snapshot?.title,
+      movieId: snapshot?.id));
+      
 }
 
 class QuadraticOffsetTween extends Tween<Offset> {

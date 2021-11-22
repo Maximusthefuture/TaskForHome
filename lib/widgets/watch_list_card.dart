@@ -71,7 +71,11 @@ MovieDetailBlocProvider(
                               Expanded(
                                 child: Column(children: [
                                   // Text("${recommendation?.name}"),
-                                  Text("${recommendation?.movieName ?? ""}",style: TextStyle(fontWeight: FontWeight.bold),)
+                                  Text(
+                                    "${recommendation?.movieName ?? ""}",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  )
                                 ]),
                               )
                             ],

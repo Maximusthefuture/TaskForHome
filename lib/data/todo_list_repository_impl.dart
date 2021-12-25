@@ -5,13 +5,15 @@ import 'package:tasks_for_home/data/remote_data_source.dart';
 import 'package:tasks_for_home/data/todo_data_source.dart';
 import 'package:tasks_for_home/data/todo_list_repository.dart';
 
-class TodoListRepositoryImpl implements TodoListRepository {
+class TodoListRepositoryImpl<T extends QuerySnapshot>
+    implements TodoListRepository {
   TodoDataSource remoteDataSource;
   TodoDataSource localDataSource;
 
   TodoListRepositoryImpl(
       {required this.remoteDataSource, required this.localDataSource});
 
+  //TODO Local data and remote data
   @override
   Stream<QuerySnapshot> getAllTodoItems() {
     return FirebaseFirestore.instance.collection('todo_list').snapshots();
@@ -26,13 +28,17 @@ class TodoListRepositoryImpl implements TodoListRepository {
   }
 
   @override
-  List<BuyList> getItemFromQuery(QuerySnapshot snapshot) {
-    return snapshot.docs.map((doc) {
-      return BuyList.fromSnapshot(doc);
-    }).toList();
+  List<BuyList> getItemFromQuery(QuerySnapshot snapshot,
+      {bool isLocal = false})  {
+    // if (isLocal) {
+    //   return localDataSource.getAllItems().then((value) => );
+    // } else {
+      return snapshot.docs.map((doc) {
+        return BuyList.fromSnapshot(doc);
+      }).toList();
+    // }
   }
 
-  
   @override
   Future<void> addTodo(BuyList buyList, bool local) {
     if (local) {

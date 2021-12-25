@@ -13,12 +13,17 @@ class PopularTvShowWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
+    return Container(
+
         child: Column(
+
             // mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-          Text("Popular tvShow"),
+          Text("Popular tvShows", style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold
+          ),),
           Container(
               height: 200,
               width: double.infinity,

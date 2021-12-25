@@ -10,7 +10,11 @@ import 'package:tasks_for_home/data/login_state.dart';
 import 'package:tasks_for_home/data/remote_data_source.dart';
 import 'package:tasks_for_home/data/todo_data_source.dart';
 import 'package:tasks_for_home/data/todo_list_repository_impl.dart';
+import 'package:tasks_for_home/db/buy_list_dao.dart';
+import 'package:tasks_for_home/widgets/buy_list_bottom_sheet.dart';
 import 'package:tasks_for_home/widgets/buy_list_cell.dart';
+
+enum Some { showRemote, showLocal, deleteAllLocal, deleteAllRemote, showAll }
 
 class BuyListScreen extends StatefulWidget {
   BuyListScreen({Key? key}) : super(key: key);
@@ -21,32 +25,61 @@ class BuyListScreen extends StatefulWidget {
 
 class _BuyListScreenState extends State<BuyListScreen> {
   //TODO: need personal list?
+  RemoteDataSouce remoteDataSource = RemoteDataSouce();
+  LocalDataSource localDataSource = LocalDataSource();
+  Some? some = Some.showRemote;
   List<BuyList> buyList = [];
   StreamSubscription<QuerySnapshot>? _streamSubscription;
   TodoListRepositoryImpl? repository;
+
   void _updateWatchList(QuerySnapshot snapshot) {
     setState(() {
       buyList = repository!.getItemFromQuery(snapshot);
+      // g();
     });
   }
 
   _BuyListScreenState() {
     // if (!showCheckedItems) {
-    RemoteDataSouce remoteDataSource = RemoteDataSouce();
-    LocalDataSource localDataSource = LocalDataSource();
-     repository = TodoListRepositoryImpl(
+
+    repository = TodoListRepositoryImpl(
         remoteDataSource: remoteDataSource, localDataSource: localDataSource);
-    _streamSubscription = repository!.getAllTodoItems().listen(_updateWatchList);
+    switch (some) {
+      case Some.showAll:
+        print("Show All");
+        break;
+      case Some.showRemote:
+        print("Show remote");
+        break;
+      case Some.showLocal:
+        print("show local");
+        break;
+      case Some.deleteAllLocal:
+        print("Delete All Lolcals");
+        break;
+      case Some.deleteAllRemote:
+        print("Delete All Remote");
+        break;
+        case null: print("null");
+    }
+    _streamSubscription =
+        repository!.getAllTodoItems().listen(_updateWatchList);
+    // g();
     // } else {
     // _streamSubscription = repository.getDoneItems().listen(_updateWatchList);
     // }
   }
+
+  void g() async {
+    buyList = await localDataSource.getAllItems();
+  }
+
   var local = true;
   bool showToAll = true;
-  String category = "Home";
+  
   BuyList? buyListModel;
   bool showCheckedItems = false;
-  List<String> list = <String>["Home", "Study", "Work", "Buy", "Clean"];
+  
   final myController = TextEditingController();
   FocusNode? focusNode;
   @override
@@ -64,6 +97,7 @@ class _BuyListScreenState extends State<BuyListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool? isSelected = false;
     var provider = Provider.of<LoginState>(context, listen: true);
     return Scaffold(
       appBar: AppBar(
@@ -75,15 +109,35 @@ class _BuyListScreenState extends State<BuyListScreen> {
               showAddItemMenu(context, myController, provider);
             },
           ),
-          IconButton(
-            icon: Icon(Icons.plus_one_sharp),
-            onPressed: () {
-              setState(() {
-                showCheckedItems = !showCheckedItems;
-                print(showCheckedItems);
-              });
-            },
-          ),
+          PopupMenuButton(
+              onSelected: (result) {
+                switch (result) {
+                  case Some.showLocal:
+                    isSelected = true;
+                    print("show local");
+                    break;
+                  case Some.showRemote:
+                    isSelected = false;
+                    print("show remote");
+                    break;
+                }
+              },
+              itemBuilder: (context) => <PopupMenuEntry<Some>>[
+                    PopupMenuItem<Some>(
+                      value: Some.showLocal,
+                      child: Text("Show local"),
+                    ),
+                    PopupMenuItem<Some>(
+                      value: Some.showRemote,
+                      child: Text("Show remote"),
+                    ),
+                    // const PopupMenuDivider(),
+                    // PopupMenuItem<Some>(
+                    //   value: Some.showLocal,
+                    //   child: ListTile(
+                    //       leading: Icon(null), title: Text('Bring hurricane')),
+                    // ),
+                  ])
         ],
       ),
       body: Container(
@@ -91,14 +145,16 @@ class _BuyListScreenState extends State<BuyListScreen> {
             itemCount: buyList.length,
             itemBuilder: (BuildContext context, int index) {
               var item = buyList[index];
-              if (!item.isChecked!) {
+              if (item.isChecked == 0) {
                 return Dismissible(
                     key: Key("f"),
                     onDismissed: (direction) {
                       setState(() {
                         buyList.removeAt(index);
-                        // item.isChecked = false;
-                        provider.updateTodoData(item.reference!.id, true);
+                        item.isChecked = 1;
+                        provider.updateTodoData(
+                            item.reference!.id, item.isChecked!);
+                        TodoListDB.db.removeItem(index);
                       });
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                         content: Text("Deleted"),
@@ -106,7 +162,7 @@ class _BuyListScreenState extends State<BuyListScreen> {
                     },
                     background: Container(color: Colors.red),
                     child: BuyListCell(item));
-              } else if (item.isChecked! && showCheckedItems) {
+              } else if (item.isChecked == 0 && showCheckedItems) {
                 return BuyListCell(item);
               }
               return Container();
@@ -116,139 +172,29 @@ class _BuyListScreenState extends State<BuyListScreen> {
     );
   }
 
-  Widget modalBottomShit(BuildContext context,
-      TextEditingController myController, LoginState appState) {
-    // var dropdownValue = "Дом";
-    return Container(
-      height: MediaQuery.of(context).size.height / 6,
-      // color: Colors.amber,
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Container(
-                padding: EdgeInsets.all(16),
-                width: MediaQuery.of(context).size.width,
-                child: TextField(
-                  autofocus: true,
-                  decoration: InputDecoration(hintText: "Fare cose"),
-                  controller: myController,
-                )),
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                IconButton(
-                    onPressed: () {
-                      showAlert(list);
-                    },
-                    icon: Icon(Icons.flag)),
-                IconButton(
-                    onPressed: () {
-                      local = false;
-                    },
-                    icon: Icon(Icons.mail)),
-                Spacer(),
-                Align(
-                    alignment: Alignment.centerLeft,
-                    child: Padding(
-                        padding: EdgeInsets.only(right: 16),
-                        child: GestureDetector(
-                          child: Icon(Icons.send),
-                          onTap: () {
-                            buyListModel = BuyList(
-                                category: category,
-                                item: myController.text,
-                                isChecked: false);
-                            //TODO: SQLITE?
-                            
-                            // if (showToAll) {
-                            //   appState.addTodoList(buyListModel!);
-                            // } else {
-                            //   // sqlite.addTodoList();
-                            // }
-                            
-                            repository!.addTodo(buyListModel!, local);
-                            print(local);
-
-                            Navigator.pop(context);
-                            myController.clear();
-                          },
-                          onLongPress: () {
-                            //TODO ADD TIME PICKER
-                            // showDialog(
-                            //     context: context,
-                            //     builder: (builder) {
-                            //       return AlertDialog(
-                            //         title: Text("TITLE"),
-                            //       );
-                            //     });
-                            local = false;
-                            repository!.addTodo(buyListModel!, local);
-                            print("LONG PRESS");
-                            //showSnackBar
-                            final snackBar = SnackBar(content: Text('Added to list'));
-                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                            Navigator.pop(context);
-                            
-                          },
-                        ))),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void showAlert(List<String> list) {
-    showDialog(
-        context: context,
-        builder: (builder) {
-          // String dropdownValue = 'Дом';
-          return StatefulBuilder(builder: (context, myState) {
-            return AlertDialog(
-                content: DropdownButton<String>(
-                    value: category,
-                    icon: const Icon(Icons.arrow_downward),
-                    iconSize: 24,
-                    elevation: 16,
-                    style: const TextStyle(color: Colors.deepPurple),
-                    underline: Container(
-                      height: 2,
-                      color: Colors.deepPurpleAccent,
-                    ),
-                    onChanged: (String? newValue) {
-                      myState(() {
-                        // dropdownValue = newValue!;
-                        category = newValue!;
-                        print("Category $category");
-                      });
-                    },
-                    items: list.map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList()));
-          });
-        });
-  }
+  
 
   void showAddItemMenu(BuildContext context, TextEditingController myController,
       LoginState appState) {
     showModalBottomSheet(
         isScrollControlled: true,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(10),
+              topLeft: Radius.circular(10),
+              bottomRight: Radius.circular(10),
+              topRight: Radius.circular(10)),
         ),
         context: context,
         builder: (BuildContext context) {
-          return Padding(
-            padding: MediaQuery.of(context).viewInsets,
-            child: modalBottomShit(context, myController, appState),
-          );
+          return StatefulBuilder(builder: (context, setState) {
+            // return Padding(
+            // padding: MediaQuery.of(context).viewInsets,
+            // return modalBottomShit(context, myController, appState);
+            return BuyListAddMenuBottomSheet(myController: myController, 
+            appState: appState, 
+            buyListModel: buyListModel, repository: repository,);
+          });
         });
   }
 }

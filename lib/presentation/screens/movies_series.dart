@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tasks_for_home/data/login_state.dart';
+import 'package:tasks_for_home/data/movie_bloc_provider.dart';
 import 'package:tasks_for_home/data/movie_search.dart';
 import 'package:tasks_for_home/data/movies_bloc.dart';
 import 'package:tasks_for_home/data/tv_show_bloc.dart';
@@ -13,26 +14,48 @@ import 'package:tasks_for_home/widgets/popular_movies.dart';
 import 'watch_list_screen.dart';
 
 class MoviesTvSeries extends StatefulWidget {
+  final int? page;
+  const MoviesTvSeries({Key? key, @required this.page}) : super(key: key);
+
   @override
   _MoviesTvSeriesState createState() => _MoviesTvSeriesState();
 }
 
 class _MoviesTvSeriesState extends State<MoviesTvSeries> {
   // final MoviesRepositoryImpl repositoryImpl = MoviesRepositoryImpl();
-  final MoviesBloc bloc = MoviesBloc();
+  MoviesBloc? bloc = MoviesBloc();
   final TVShowBloc tvShowBloc = TVShowBloc();
-  
+  int pageNumber = 1;
+  ScrollController? scrollController;
 
   @override
   void initState() {
     super.initState();
-    bloc.fetchPopularMovies();
+    // bloc = MoviesBloc();
+    // bloc?.fetchPopularMovies();
+    scrollController = ScrollController()..addListener(scrollListener);
+    bloc?.fetchPopularMovies(pageNumber);
     tvShowBloc.fetchPopularTvShows();
+  }
+
+  void scrollListener() {
+    //TODO add some var isLoading?
+    if (scrollController?.position.pixels ==
+        scrollController?.position.maxScrollExtent) {
+      bloc?.fetchPopularMovies(pageNumber++);
+    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    // bloc = MovieBlocProvider.of(context);
+    // bloc?.pageNumber(widget.page ?? 2);
+    super.didChangeDependencies();
   }
 
   @override
   void dispose() {
-    bloc.dispose();
+    bloc?.dispose();
     tvShowBloc.dispose();
     super.dispose();
   }
@@ -46,34 +69,37 @@ class _MoviesTvSeriesState extends State<MoviesTvSeries> {
             IconButton(
               icon: Icon(Icons.search),
               onPressed: () {
-                showSearch(context: context, delegate: MovieSearch(array:[]));
+                showSearch(context: context, delegate: MovieSearch(array: []));
               },
             ),
             IconButton(
               icon: Icon(Icons.album),
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(builder: (_) {
-                  return  WatchList();
+                  return WatchList();
                 }));
               },
             ),
           ],
         ),
-        body: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
+        body: SingleChildScrollView(
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
               Padding(
                 padding: EdgeInsets.all(3),
                 child: Text(
                   'Popular movies',
-                  style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
                 ),
               ),
-              StreamBuilder<List<Results>>(
-                stream: bloc.popularMovies,
+              StreamBuilder<List<Results>?>(
+                stream: bloc?.popularMovies,
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
-                    return PopularMoviesWidget(list: snapshot.data);
+                    return PopularMoviesWidget(
+                        list: snapshot.data,
+                        scrollViewController: scrollController);
                   } else if (snapshot.hasError) {
                     print(snapshot.error);
                     return Text("${snapshot.error}");
@@ -107,7 +133,56 @@ class _MoviesTvSeriesState extends State<MoviesTvSeries> {
                   );
                 },
               ),
-              Text("Watch list")
-            ]));
+              Text(
+                "Latest movies",
+                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+              ),
+              Row(
+                children: [
+                  Container(
+                    color: Colors.red,
+                    height: 100,
+                    width: 100,
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Container(
+                    color: Colors.red,
+                    height: 100,
+                    width: 100,
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Container(
+                    color: Colors.red,
+                    height: 100,
+                    width: 100,
+                  ),
+                ],
+              ),
+              Text("Watch list"),
+              Container(
+                child: GestureDetector(
+                  onTap: () {
+                    //  widget.page++;
+                    pageNumber++;
+                    // print(pageNumber);
+                    // bloc?.fetchPopularMovies();
+                    // bloc?.pageNumber(pageNumber);
+                    bloc?.fetchPopularMovies(pageNumber);
+                  },
+                  child: SizedBox(
+                    width: 100,
+                    height: 100,
+                    child: Container(
+                      child: Text("TEXT"),
+                      color: Colors.red,
+                    ),
+                  ),
+                ),
+              )
+            ])));
   }
 }

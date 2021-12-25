@@ -33,4 +33,9 @@ class MoviesRepositoryImpl implements MoviesRepository {
   Future<MovieDetails> fetchTvShowById(int id) {
     return moviesApiProvider.fetchTvShowById(id);
   }
+
+  @override
+  Future<List<Results>?> fetchMoviesByPage(int page) {
+    return moviesApiProvider.fetchPopularWithPage(page);
+  }
 }

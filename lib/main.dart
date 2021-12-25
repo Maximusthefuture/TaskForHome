@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:tasks_for_home/data/movie_bloc_provider.dart';
 import 'package:tasks_for_home/domain/notification_service.dart';
 import 'package:tasks_for_home/presentation/screens/buy_list_screen.dart';
 import 'package:tasks_for_home/presentation/screens/movies_series.dart';
@@ -13,9 +14,10 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await NotificationService.init();
   await Firebase.initializeApp();
-  final b;
   runApp(ChangeNotifierProvider<LoginState>(
-      create: (context) => LoginState(), builder: (context, _) => Home()));
+      create: (context) => 
+      LoginState(), builder: (context, _) => 
+      Home()));
 }
 
 
@@ -32,7 +34,7 @@ class HomeState extends State<Home> {
   int _selectedIndex = 0;
   static List<Widget> _widgetsOptions = <Widget>[
     BuyListScreen(),
-    MoviesTvSeries(),
+    MoviesTvSeries(page: 1),
     ReminderScreen(),
     SettingsScreeen(),
     Text('her her')

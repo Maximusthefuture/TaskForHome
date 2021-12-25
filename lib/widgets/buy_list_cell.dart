@@ -44,16 +44,21 @@ class _BuyListCellState extends State<BuyListCell> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      buyListModel!.item!,
-                      textScaleFactor: 1,
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                // Column(
+                //   // mainAxisAlignment: MainAxisAlignment.center,
+                //   children: [
+                    Expanded(
+                      child: Text(
+                        buyListModel!.item!,
+                        // textScaleFactor: 1,
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                        maxLines: 3,
+                        // overflow: TextOverflow.ellipsis,
+                        softWrap: true,
+                      ),
                     ),
-                  ],
-                ),
+                  // ],
+                // ),
                 Spacer(),
                 Center(child: Text(buyListModel!.category!))
               ],

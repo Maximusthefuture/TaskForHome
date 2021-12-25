@@ -38,9 +38,10 @@ class TodoListDB {
     if (id == null) {
       id = 1;
     }
+    // String? category = todo.category ?? "";
     return await db.rawInsert(
       "INSERT INTO todo (id, title, category, isDone) "
-      "VALUES (?, ?, ?, ?",
+      "VALUES (?, ?, ?, ?)",
       [id, todo.item, todo.category, todo.isChecked]
     );
   }
@@ -60,6 +61,10 @@ class TodoListDB {
     List<BuyList> list = records.isNotEmpty 
     ? records.map((rec) => todoFromMap(rec)).toList() : [];
     return list;
+  }
+  //TODO
+  void removeItem(int index) {
+
   }
 
 }

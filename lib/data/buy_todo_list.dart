@@ -11,14 +11,14 @@ class BuyList {
     String? category;
     String? title;
     String? description;
-    bool? isChecked;
+    int? isChecked;
     bool? showToOthers;
     DocumentReference? reference;
 
     BuyList({
       this.item,
       this.category,
-      this.isChecked = false});
+      this.isChecked = 0});
 
       BuyList.fromSnapshot(DocumentSnapshot snapshot)
       : assert(snapshot != null),

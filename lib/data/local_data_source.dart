@@ -8,4 +8,9 @@ class LocalDataSource implements TodoDataSource {
       return TodoListDB.db.addTodo(todoList);
   }
 
+  @override
+  Future<List<BuyList>> getAllItems() {
+    return TodoListDB.db.getAllTodo();
+  }
+
 }

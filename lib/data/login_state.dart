@@ -56,12 +56,12 @@ class LoginState extends ChangeNotifier {
     });
   }
 
-  Future<void> updateTodoData(String id, bool isDone) async {
+  Future<void> updateTodoData(String id, int isDone) async {
     final todo = FirebaseFirestore.instance.collection('todo_list');
     return await todo.doc(id).update({
       // 'item': todoList.item,
       // 'category': todoList.category,
-      'isDone': isDone
+      'isDone': 1
     });
   }
 

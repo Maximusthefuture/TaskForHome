@@ -8,6 +8,7 @@ import 'package:tasks_for_home/data/movie_search_bloc_provider.dart';
 import 'package:tasks_for_home/db/movies_db.dart';
 import 'package:tasks_for_home/domain/json_models.dart';
 import 'package:tasks_for_home/domain/watch_list.dart';
+import 'package:tasks_for_home/helpers/helpers.dart';
 
 import 'login_state.dart';
 
@@ -81,7 +82,7 @@ class _MovieSearchState extends State<MovieSearchWidget> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    getAllMovies();
+    // getAllMovies();
   }
 
   @override
@@ -131,43 +132,28 @@ class _MovieSearchState extends State<MovieSearchWidget> {
   }
 }
 
-void addToWatchList(
-    LoginState appState, Results? snapshot, BuildContext context) {
-  // appState.addToWatchList([snapshot?.posterPath]);
-  final snackBar = SnackBar(
-      content: Text(
-          "${snapshot?.name ?? snapshot?.originalTitle} added to watch list"));
-  ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  var name = FirebaseAuth.instance.currentUser?.displayName;
-  appState.addWatchList(WatchListModel(
-      name: name,
-      movieIcon: snapshot?.posterPath,
-      movieName: snapshot?.originalTitle,
-      movieId: snapshot?.id));
-}
-
 Future insertNewMovie(Results? snapshot) async {
   await MoviesDatabase.instance.insertMovie(
       WatchListModel(movieName: snapshot?.name, movieId: snapshot?.id));
 }
 
-List<WatchListModel> myList = [];
-Future<List<WatchListModel>> getAllMovies() async {
-  var list = await MoviesDatabase.instance.getAllMovies();
-  myList = list;
-  return list;
-}
+// List<WatchListModel> myList = [];
+// Future<List<WatchListModel>> getAllMovies() async {
+//   var list = await MoviesDatabase.instance.getAllMovies();
+//   myList = list;
+//   return list;
+// }
 
-Future<bool> isMovieorShowInList(int? id) async {
-  bool? isHave;
-  var list = getAllMovies();
-  myList.forEach((element) {
-    if (element.movieId == id) {
-      isHave = true;
-    }
-  });
-  return isHave ?? false;
-}
+// Future<bool> isMovieorShowInList(int? id) async {
+//   bool? isHave;
+//   var list = getAllMovies();
+//   myList.forEach((element) {
+//     if (element.movieId == id) {
+//       isHave = true;
+//     }
+//   });
+//   return isHave ?? false;
+// }
 
 class MovieSearchResultWidget extends StatelessWidget {
   final Results? snapshot;
@@ -193,14 +179,15 @@ class MovieSearchResultWidget extends StatelessWidget {
             //Check if this id in db? or check is it in firebase?
             //add in db and in firebase?
             onTap: () async {
-              getAllMovies();
-              if (await isMovieorShowInList(snapshot?.id)) {
-                final snackBar = SnackBar(content: Text("Already in list"));
-                ScaffoldMessenger.of(context).showSnackBar(snackBar);
-              } else {
-                addToWatchList(provider, snapshot, context);
-                insertNewMovie(snapshot);
-              }
+              // getAllMovies();
+              // if (await isMovieorShowInList(snapshot?.id)) {
+              //   final snackBar = SnackBar(content: Text("Already in list"));
+              //   ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              // } else {
+              //   addToWatchList(provider, snapshot, context);
+              //   insertNewMovie(snapshot);
+              // }
+              Helpers.addToWatchListInSearch(provider, snapshot, context);
             },
             child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),

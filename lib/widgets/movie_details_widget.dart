@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ import 'package:tasks_for_home/domain/json_models.dart';
 import 'dart:math';
 
 import 'package:tasks_for_home/domain/watch_list.dart';
+import 'package:tasks_for_home/helpers/helpers.dart';
 // import 'package:cached_network_image/cached_network_image.dart';
 
 class MovieDetailsWidget extends StatelessWidget {
@@ -166,10 +168,15 @@ class MovieDetailsWidget extends StatelessWidget {
                           iconSize: 30,
                           padding: EdgeInsets.all(9),
                           onPressed: () {
-
-                            //TODO change icon when added?????
-                            addToWatchList(provider, snapshot?.data, context);
+                            // isInList(snapshot?.data?.id, ) {
+                            Helpers.addToWatchList(provider, snapshot?.data, context);
                             print("ICONS");
+                            // }
+
+                            // isInList(idFirebase: 123, snapshot.data.id) {
+                            //     print("Allready in list");
+                            // }
+                            //TODO change icon when added?????
                           },
                         ),
                         Icon(
@@ -181,22 +188,6 @@ class MovieDetailsWidget extends StatelessWidget {
                   Text("${snapshot?.data?.overview}")
                 ])));
   }
-}
-//где делать проверку, есть в базе данных или нет?
-void addToWatchList(
-    LoginState appState, MovieDetails? snapshot, BuildContext context) {
-  // appState.addToWatchList([snapshot?.posterPath]);
-  final snackBar = SnackBar(
-      content: Text(
-          "${snapshot?.title ?? snapshot?.title} added to watch list"));
-  ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  var name = FirebaseAuth.instance.currentUser?.displayName;
-  appState.addWatchList(WatchListModel(
-      name: name,
-      movieIcon: snapshot?.posterPath,
-      movieName: snapshot?.title,
-      movieId: snapshot?.id));
-      
 }
 
 class QuadraticOffsetTween extends Tween<Offset> {
@@ -225,14 +216,5 @@ class ValleyQuadraticCurve extends Curve {
     assert(t >= 0.0 && t <= 1.0);
     double result = (4 * pow(t - 0.5, 2)).toDouble();
     return result;
-  }
-}
-
-//TODO: добавить id в базу данных просто и все? или название фильма тоже?
-bool isInList(int? idFirebase, int idFromDB) {
-  if (idFirebase == idFromDB) {
-    return true;
-  } else {
-    return false;
   }
 }

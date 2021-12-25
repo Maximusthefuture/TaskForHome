@@ -115,10 +115,12 @@ class _BuyListScreenState extends State<BuyListScreen> {
                   case Some.showLocal:
                     isSelected = true;
                     print("show local");
+                    // showOnlyDataFromDB();
                     break;
                   case Some.showRemote:
                     isSelected = false;
                     print("show remote");
+                    // showOnlyDataFromRemote();
                     break;
                 }
               },
